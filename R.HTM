@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Nosso Relacionamento - Linha do Tempo</title>
+<style>
+  /* Reset e base */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #1a1a1a, #2c3e50);
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  h1 {
+    font-size: 2.8rem;
+    margin-bottom: 40px;
+    text-align: center;
+    text-shadow: 0 0 15px rgba(255,255,255,0.6);
+  }
+
+  /* Linha do tempo */
+  .timeline {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    height: 250px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    margin-bottom: 50px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    box-sizing: border-box;
+  }
+  .timeline::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    right: 20px;
+    height: 4px;
+    background: #ccc;
+    border-radius: 2px;
+    transform: translateY(-50%);
+    z-index: 0;
+  }
+
+  /* Pontos da timeline */
+  .point {
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: #e74c3c;
+    box-shadow: 0 0 15px rgba(231,76,60,0.7);
+    cursor: pointer;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    z-index: 1;
+  }
+  .point:hover,
+  .point.active {
+    background-color: #f39c12;
+    box-shadow: 0 0 25px rgba(243,156,18,0.9);
+    transform: translateY(-50%) scale(1.5);
+    z-index: 2;
+  }
+
+  /* Distribuição uniforme usando CSS custom property */
+  .point {
+    left: calc((100% / 14) * var(--index) + 20px);
+  }
+
+  /* Container da foto */
+  .photo-container {
+    margin-top: 40px;
+    width: 100%;
+    max-width: 600px;
+    border-radius: 20px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.6);
+    overflow: hidden;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    pointer-events: none;
+  }
+  .photo-container.visible {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+  }
+  .photo-container img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Frase */
+  .phrase {
+    margin-top: 25px;
+    font-size: 1.6rem;
+    color: #f0f0f0;
+    text-align: center;
+    font-weight: 500;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    pointer-events: none;
+  }
+  .phrase.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  /* Suspense */
+  .suspense {
+    background-color: rgba(0,0,0,0.85);
+    color: #fff;
+    font-size: 2rem;
+    text-align: center;
+    padding: 40px;
+    border-radius: 20px;
+    margin-top: 40px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1.5s ease;
+  }
+  .suspense.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Proposta */
+  .proposal {
+    font-size: 2.8rem;
+    color: #f39c12;
+    font-weight: bold;
+    margin-top: 25px;
+    text-shadow: 0 0 25px rgba(243,156,18,1);
+    animation: glow 3s infinite alternate;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s ease;
+  }
+  .proposal.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  @keyframes glow {
+    0% { text-shadow: 0 0 25px rgba(243,156,18,0.8); }
+    100% { text-shadow: 0 0 55px rgba(243,156,18,1); }
+  }
+
+  /* Corações caindo */
+  .heart {
+    position: fixed;
+    top: -50px;
+    width: 25px;
+    height: 25px;
+    background: url('data:image/svg+xml;utf8,<svg fill="red" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 1.01 4.5 2.09C13.09 4.01 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>') no-repeat center;
+    background-size: contain;
+    pointer-events: none;
+    animation-name: fall, sway;
+    animation-timing-function: linear, ease-in-out;
+    animation-iteration-count: infinite, infinite;
+  }
+  @keyframes fall {
+    0% { top: -50px; opacity: 1; }
+    100% { top: 110vh; opacity: 0; }
+  }
+  @keyframes sway {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(15px); }
+  }
+
+  /* Responsividade */
+  @media (max-width: 768px) {
+    h1 { font-size: 2rem; }
+    .timeline { height: 180px; }
+    .point { width: 30px; height: 30px; }
+    .photo-container { max-width: 100%; }
+    .phrase { font-size: 1.4rem; }
+  }
+  @media (max-width: 480px) {
+    .point { width: 25px; height: 25px; }
+    .phrase { font-size: 1.2rem; }
+    .photo-container { max-width: 90%; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Nosso Relacionamento - Linha do Tempo</h1>
+
+<audio id="audioPlayer" src="C.mp3" preload="auto"></audio>
+
+<div class="timeline">
+  <!-- Pontos com índice para CSS custom property -->
+  <div class="point" style="--index:0" data-photo="foto1.jpg" data-phrase="Nosso primeiro olhar, e já senti algo especial. 💫"></div>
+  <div class="point" style="--index:1" data-photo="foto2.jpg" data-phrase="Nosso primeiro sorriso compartilhado. 😊"></div>
+  <div class="point" style="--index:2" data-photo="foto3.jpg" data-phrase="A primeira mensagem que aqueceu meu coração. 💌"></div>
+  <div class="point" style="--index:3" data-photo="foto4.jpg" data-phrase="Nosso primeiro passeio juntos. 🌇"></div>
+  <div class="point" style="--index:4" data-photo="foto5.jpg" data-phrase="O dia em que tudo mudou para melhor. ✨"></div>
+  <div class="point" style="--index:5" data-photo="foto6.jpg" data-phrase="Cada risada contigo é um presente. 😂"></div>
+  <div class="point" style="--index:6" data-photo="foto7.jpg" data-phrase="Aquele abraço que nunca quero soltar. 🤗"></div>
+  <div class="point" style="--index:7" data-photo="foto8.jpg" data-phrase="A música que virou trilha do nosso amor. 🎶"></div>
+  <div class="point" style="--index:8" data-photo="foto9.jpg" data-phrase="Nosso primeiro 'eu te amo'. 💖"></div>
+  <div class="point" style="--index:9" data-photo="foto10.jpg" data-phrase="Momentos simples que viram eternos. 📸"></div>
+  <div class="point" style="--index:10" data-photo="foto11.jpg" data-phrase="Nosso jeitinho de cuidar um do outro. 🫶"></div>
+  <div class="point" style="--index:11" data-photo="foto12.jpg" data-phrase="Aquele dia de chuva que passamos juntos. ☔"></div>
+  <div class="point" style="--index:12" data-photo="foto13.jpg" data-phrase="Nosso dia de viagem inesquecível. ✈️"></div>
+  <div class="point" style="--index:13" data-photo="foto14.jpg" data-phrase="Risos e mais risos, sempre juntos. 😂"></div>
+  <div class="point" style="--index:14" data-photo="foto15.jpg" data-phrase="Te amo mais a cada segundo que passa. ⏳"></div>
+</div>
+
+<div class="photo-container" id="photoContainer">
+  <img id="photo" src="" alt="Momento do relacionamento" />
+</div>
+
+<div class="phrase" id="phrase"></div>
+<div class="suspense" id="suspense">Espere um pouquinho... Tenho algo muito importante para te dizer... 💬</div>
+<div class="proposal" id="proposal">Quer namorar comigo? 💍❤️</div>
+
+<script>
+  const points = document.querySelectorAll('.point');
+  const photoContainer = document.getElementById('photoContainer');
+  const photo = document.getElementById('photo');
+  const phrase = document.getElementById('phrase');
+  const suspense = document.getElementById('suspense');
+  const proposal = document.getElementById('proposal');
+  const audioPlayer = document.getElementById('audioPlayer');
+
+  // Função para limpar destaques
+  function clearActive() {
+    points.forEach(p => p.classList.remove('active'));
+    suspense.classList.remove('visible');
+    proposal.classList.remove('visible');
+  }
+
+  // Inicializa com o primeiro ponto ativo
+  function selectPoint(index) {
+    clearActive();
+    const point = points[index];
+    point.classList.add('active');
+
+    photo.src = point.dataset.photo;
+    photo.alt = point.dataset.phrase;
+    photoContainer.classList.add('visible');
+
+    phrase.textContent = point.dataset.phrase;
+    phrase.classList.add('visible');
+
+    if(index === 0) {
+      audioPlayer.currentTime = 0;
+      audioPlayer.play();
+    }
+
+    if(index === points.length - 1) {
+      setTimeout(() => suspense.classList.add('visible'), 1000);
+      setTimeout(() => proposal.classList.add('visible'), 5000);
+    } else {
+      suspense.classList.remove('visible');
+      proposal.classList.remove('visible');
+    }
+  }
+
+  points.forEach((point, index) => {
+    point.addEventListener('click', () => selectPoint(index));
+    point.addEventListener('keydown', e => {
+      if(e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        selectPoint(index);
+      }
+    });
+  });
+
+  selectPoint(0);
+
+  // Cria corações caindo
+  function createHeart() {
+    const heart = document.createElement('div');
+    heart.classList.add('heart');
+    heart.style.left = Math.random() * 100 + 'vw';
+    heart.style.animationDuration = (3 + Math.random() * 3) + 's';
+    heart.style.animationDelay = '0s';
+    heart.style.opacity = Math.random();
+
+    document.body.appendChild(heart);
+
+    setTimeout(() => {
+      heart.remove();
+    }, 6000);
+  }
+
+  // Gera corações a cada 300ms
+  setInterval(createHeart, 300);
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
