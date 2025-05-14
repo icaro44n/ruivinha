@@ -4,14 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Linha do Tempo do Amor</title>
+  
+  <!-- Fontes para estilo iOS -->
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    /* Fonte estilo iOS */
     body {
-      font-family: Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", "Arial", sans-serif;
       background: linear-gradient(to bottom right, #1a1a1a, #2c3e50);
       color: #fff;
       display: flex;
@@ -20,20 +18,22 @@
       padding: 20px;
       min-height: 100vh;
       text-align: center;
+      overflow: auto; /* Permite rolagem */
     }
 
     h1 {
-      font-size: 2rem;
+      font-size: 2.5rem;
       margin-bottom: 30px;
       text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+      font-family: 'SF Pro Display', sans-serif;
     }
 
     .timeline {
       position: relative;
       width: 100%;
-      max-width: 900px;
-      height: 100px;
-      background: rgba(255, 255, 255, 0.05);
+      max-width: 1000px;
+      height: auto;
+      background: rgba(255, 255, 255, 0.1);
       border-radius: 15px;
       display: flex;
       justify-content: space-between;
@@ -55,14 +55,15 @@
     }
 
     .point {
-      width: 22px;
-      height: 22px;
+      width: 24px;
+      height: 24px;
       background: #e74c3c;
       border-radius: 50%;
       position: relative;
       z-index: 1;
       transition: transform 0.3s, background 0.3s;
       flex-shrink: 0;
+      cursor: pointer;
     }
 
     .point:hover {
@@ -120,6 +121,22 @@
       display: none;
     }
 
+    /* Chuva de corações */
+    .heart {
+      position: absolute;
+      top: -50px;
+      font-size: 1.5rem;
+      animation: fall 4s linear infinite;
+      opacity: 0.8;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+    }
+
     @media (max-width: 768px) {
       .timeline {
         flex-wrap: wrap;
@@ -133,8 +150,39 @@
         height: 20px;
       }
 
+      h1 {
+        font-size: 2rem;
+      }
+
+      .photo-container {
+        max-width: 90%;
+      }
+
       .phrase {
         font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.6rem;
+      }
+
+      .timeline {
+        gap: 8px;
+      }
+
+      .point {
+        width: 18px;
+        height: 18px;
+      }
+
+      .photo-container {
+        max-width: 100%;
+      }
+
+      .phrase {
+        font-size: 0.8rem;
       }
     }
   </style>
@@ -194,14 +242,39 @@
         }
 
         if (index === points.length - 1) {
-          setTimeout(() => suspense.style.display = 'block', 1000);
-          setTimeout(() => proposal.style.display = 'block', 4000);
+          setTimeout(() => {
+            suspense.style.display = 'block';
+          }, 1000);
+          
+          setTimeout(() => {
+            proposal.style.display = 'block';
+            createHeartRain();  // Inicia a chuva de corações
+          }, 4000);
         } else {
           suspense.style.display = 'none';
           proposal.style.display = 'none';
         }
       });
     });
+
+    function createHeartRain() {
+      for (let i = 0; i < 10; i++) {  // Agora a quantidade de corações é 10
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.textContent = '❤️';
+        heart.style.left = `${Math.random() * 100}vw`; // Posição aleatória
+        heart.style.animationDuration = `${Math.random() * 2 + 3}s`; // Duração aleatória
+        document.body.appendChild(heart);
+        
+        // Remove o coração após a animação
+        setTimeout(() => {
+          heart.remove();
+        }, 4000); // Remove antes de desaparecer completamente
+      }
+    }
+
+    // Chuva de corações contínua durante a interação
+    setInterval(createHeartRain, 2000);  // Agora o intervalo é 2 segundos para não sobrecarregar
   </script>
 
 </body>
