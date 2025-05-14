@@ -24,10 +24,11 @@
   }
 
   h1 {
-    font-size: 2.8rem;
+    font-size: 3rem;
     margin-bottom: 40px;
     text-align: center;
     text-shadow: 0 0 15px rgba(255,255,255,0.6);
+    transition: font-size 0.3s ease;
   }
 
   /* Linha do tempo */
@@ -191,17 +192,24 @@
 
   /* Responsividade */
   @media (max-width: 768px) {
-    h1 { font-size: 2rem; }
+    h1 {
+      font-size: 2.5rem;
+    }
     .timeline { height: 180px; }
     .point { width: 30px; height: 30px; }
     .photo-container { max-width: 100%; }
     .phrase { font-size: 1.4rem; }
   }
+
   @media (max-width: 480px) {
+    h1 {
+      font-size: 2rem;
+    }
     .point { width: 25px; height: 25px; }
     .phrase { font-size: 1.2rem; }
     .photo-container { max-width: 90%; }
   }
+
 </style>
 </head>
 <body>
@@ -211,7 +219,6 @@
 <audio id="audioPlayer" src="C.mp3" preload="auto"></audio>
 
 <div class="timeline">
-  <!-- Pontos com índice para CSS custom property -->
   <div class="point" style="--index:0" data-photo="foto1.jpg" data-phrase="Nosso primeiro olhar, e já senti algo especial. 💫"></div>
   <div class="point" style="--index:1" data-photo="foto2.jpg" data-phrase="Nosso primeiro sorriso compartilhado. 😊"></div>
   <div class="point" style="--index:2" data-photo="foto3.jpg" data-phrase="A primeira mensagem que aqueceu meu coração. 💌"></div>
@@ -246,14 +253,12 @@
   const proposal = document.getElementById('proposal');
   const audioPlayer = document.getElementById('audioPlayer');
 
-  // Função para limpar destaques
   function clearActive() {
     points.forEach(p => p.classList.remove('active'));
     suspense.classList.remove('visible');
     proposal.classList.remove('visible');
   }
 
-  // Inicializa com o primeiro ponto ativo
   function selectPoint(index) {
     clearActive();
     const point = points[index];
@@ -292,7 +297,6 @@
 
   selectPoint(0);
 
-  // Cria corações caindo
   function createHeart() {
     const heart = document.createElement('div');
     heart.classList.add('heart');
@@ -308,15 +312,11 @@
     }, 6000);
   }
 
-  // Gera corações a cada 300ms
   setInterval(createHeart, 300);
 </script>
 
 </body>
 </html>
-
-
-
 
 
 
