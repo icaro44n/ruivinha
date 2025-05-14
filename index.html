@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Nosso Relacionamento - Linha do Tempo</title>
 <style>
-  /* Reset e base */
   * {
     box-sizing: border-box;
   }
@@ -24,14 +23,12 @@
   }
 
   h1 {
-    font-size: 3rem;
+    font-size: 2.8rem;
     margin-bottom: 40px;
     text-align: center;
     text-shadow: 0 0 15px rgba(255,255,255,0.6);
-    transition: font-size 0.3s ease;
   }
 
-  /* Linha do tempo */
   .timeline {
     position: relative;
     width: 100%;
@@ -46,6 +43,7 @@
     padding: 0 20px;
     box-sizing: border-box;
   }
+
   .timeline::before {
     content: "";
     position: absolute;
@@ -59,7 +57,6 @@
     z-index: 0;
   }
 
-  /* Pontos da timeline */
   .point {
     position: absolute;
     width: 35px;
@@ -73,6 +70,7 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
     z-index: 1;
   }
+
   .point:hover,
   .point.active {
     background-color: #f39c12;
@@ -81,12 +79,10 @@
     z-index: 2;
   }
 
-  /* Distribuição uniforme usando CSS custom property */
   .point {
     left: calc((100% / 14) * var(--index) + 20px);
   }
 
-  /* Container da foto */
   .photo-container {
     margin-top: 40px;
     width: 100%;
@@ -99,11 +95,13 @@
     transition: opacity 0.8s ease, transform 0.8s ease;
     pointer-events: none;
   }
+
   .photo-container.visible {
     opacity: 1;
     transform: scale(1);
     pointer-events: auto;
   }
+
   .photo-container img {
     width: 100%;
     height: auto;
@@ -111,7 +109,6 @@
     display: block;
   }
 
-  /* Frase */
   .phrase {
     margin-top: 25px;
     font-size: 1.6rem;
@@ -123,13 +120,13 @@
     transition: opacity 0.8s ease, transform 0.8s ease;
     pointer-events: none;
   }
+
   .phrase.visible {
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;
   }
 
-  /* Suspense */
   .suspense {
     background-color: rgba(0,0,0,0.85);
     color: #fff;
@@ -142,12 +139,12 @@
     pointer-events: none;
     transition: opacity 1.5s ease;
   }
+
   .suspense.visible {
     opacity: 1;
     pointer-events: auto;
   }
 
-  /* Proposta */
   .proposal {
     font-size: 2.8rem;
     color: #f39c12;
@@ -159,16 +156,17 @@
     pointer-events: none;
     transition: opacity 1s ease;
   }
+
   .proposal.visible {
     opacity: 1;
     pointer-events: auto;
   }
+
   @keyframes glow {
     0% { text-shadow: 0 0 25px rgba(243,156,18,0.8); }
     100% { text-shadow: 0 0 55px rgba(243,156,18,1); }
   }
 
-  /* Corações caindo */
   .heart {
     position: fixed;
     top: -50px;
@@ -181,20 +179,19 @@
     animation-timing-function: linear, ease-in-out;
     animation-iteration-count: infinite, infinite;
   }
+
   @keyframes fall {
     0% { top: -50px; opacity: 1; }
     100% { top: 110vh; opacity: 0; }
   }
+
   @keyframes sway {
     0%, 100% { transform: translateX(0); }
     50% { transform: translateX(15px); }
   }
 
-  /* Responsividade */
   @media (max-width: 768px) {
-    h1 {
-      font-size: 2.5rem;
-    }
+    h1 { font-size: 2rem; }
     .timeline { height: 180px; }
     .point { width: 30px; height: 30px; }
     .photo-container { max-width: 100%; }
@@ -202,21 +199,17 @@
   }
 
   @media (max-width: 480px) {
-    h1 {
-      font-size: 2rem;
-    }
     .point { width: 25px; height: 25px; }
     .phrase { font-size: 1.2rem; }
     .photo-container { max-width: 90%; }
   }
-
 </style>
 </head>
 <body>
 
 <h1>Nosso Relacionamento - Linha do Tempo</h1>
 
-<audio id="audioPlayer" src="C.mp3" preload="auto"></audio>
+<audio id="audioPlayer" src="C.mp3" preload="auto" controls></audio>
 
 <div class="timeline">
   <div class="point" style="--index:0" data-photo="foto1.jpg" data-phrase="Nosso primeiro olhar, e já senti algo especial. 💫"></div>
@@ -253,12 +246,14 @@
   const proposal = document.getElementById('proposal');
   const audioPlayer = document.getElementById('audioPlayer');
 
+  // Função para limpar destaques
   function clearActive() {
     points.forEach(p => p.classList.remove('active'));
     suspense.classList.remove('visible');
     proposal.classList.remove('visible');
   }
 
+  // Inicializa com o primeiro ponto ativo
   function selectPoint(index) {
     clearActive();
     const point = points[index];
@@ -317,7 +312,3 @@
 
 </body>
 </html>
-
-
-
-
