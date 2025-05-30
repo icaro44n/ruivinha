@@ -16,6 +16,8 @@
   <div class="phrase" id="phrase"></div>
   <div class="suspense" id="suspense">Espere um pouquinho... 💬</div>
   <div class="proposal" id="proposal"></div>
+  <button id="resetBtn">Recomeçar 💫</button>
+
   <script>
     const frases = [
       "Tudo começou com um olhar tímido e um sorriso que mudou meu dia.",
@@ -24,10 +26,11 @@
       "Vivemos risadas, conversas e silêncios cheios de significado.",
       "Com você, os dias comuns se tornaram especiais e cheios de cor.",
       "Nossos sonhos começaram a se entrelaçar como se fossem um só.",
-      "Hoje sei que amar é caminhar contigo, dia após dia, de coração aberto."
+      "Hoje sei que amar é caminhar contigo, dia após dia, de coração aberto.",
+      "E agora, cada capítulo é mais bonito porque é escrito com você. 💞"
     ];
 
-    const maxFotos = 7;
+    const maxFotos = 8;
     const fotos = [];
     for (let i = 1; i <= maxFotos; i++) {
       const img = new Image();
@@ -95,6 +98,16 @@
         });
       });
     }
+
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      document.getElementById('photo').src = '';
+      document.getElementById('phrase').style.display = 'none';
+      document.getElementById('proposal').style.display = 'none';
+      document.getElementById('suspense').style.display = 'none';
+      document.getElementById('photoContainer').style.display = 'none';
+      document.getElementById('audioPlayer').pause();
+      document.getElementById('audioPlayer').currentTime = 0;
+    });
 
     function createHeartRain() {
       const heart = document.createElement('div');
