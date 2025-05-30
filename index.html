@@ -2,197 +2,162 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Para o Amor da Minha Vida</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Timeline com Áudio e Proposta</title>
   <style>
     body {
-      margin: 0;
-      overflow: hidden;
-      font-family: 'Dancing Script', cursive;
-      background: linear-gradient(to bottom, #ffcccc, #ffe6f2);
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #fff0f6;
+      color: #333;
     }
-
-    canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 0;
-    }
-
-    .container {
-      position: relative;
-      z-index: 1;
+    .timeline {
       display: flex;
-      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    .point {
+      width: 30px;
+      height: 30px;
+      background: #ff4081;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid #c2185b;
+      transition: background 0.3s;
+      display: flex;
       align-items: center;
       justify-content: center;
-      height: 100vh;
+      color: white;
+      font-weight: bold;
+      user-select: none;
     }
-
-    h1 {
-      color: #d6336c;
-      text-shadow: 2px 2px 4px #ff99cc;
-      font-size: 3em;
+    .point:hover {
+      background: #c2185b;
+    }
+    .photo-container {
+      display: none;
+      margin-bottom: 10px;
       text-align: center;
     }
-
-    .timeline {
-      margin-top: 2em;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 90%;
-      max-width: 600px;
+    .photo-container img.photo {
+      max-width: 200px;
+      border-radius: 10px;
+      border: 3px solid #ff80ab;
+      box-shadow: 0 0 15px #f48fb1;
     }
-
-    .event {
-      background: #fff0f5;
-      border-left: 5px solid #ff69b4;
-      padding: 1em;
-      margin: 1em 0;
-      width: 100%;
-      box-shadow: 0 0 10px #fcd;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-
-    .event:hover {
-      transform: scale(1.05);
-    }
-
-    .imagem-amor {
-      margin-top: 2em;
-      width: 200px;
-      height: 200px;
-      clip-path: polygon(50% 0%, 61% 10%, 70% 20%, 77% 30%, 83% 40%, 87% 50%, 89% 60%, 89% 70%, 87% 80%, 83% 90%, 77% 100%, 69% 100%, 60% 95%, 50% 90%, 40% 95%, 31% 100%, 23% 100%, 17% 90%, 13% 80%, 11% 70%, 11% 60%, 13% 50%, 17% 40%, 23% 30%, 30% 20%, 39% 10%);
-      object-fit: cover;
-      border: 5px solid #ff99cc;
-      box-shadow: 0 0 20px #fcd;
-    }
-
-    #proposal {
-      margin-top: 3em;
-      font-size: 1.5em;
-      color: #b30059;
+    .phrase {
       display: none;
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      text-align: center;
+      font-style: italic;
+      color: #880e4f;
     }
-
-    /* Botão para iniciar */
-    #startBtn {
-      position: fixed;
-      top: 40%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      padding: 15px 30px;
+    .suspense, .proposal {
+      display: none;
       font-size: 1.5rem;
-      font-family: 'Dancing Script', cursive;
-      background: #ff69b4;
-      border: none;
-      border-radius: 30px;
-      color: white;
-      z-index: 10;
-      box-shadow: 0 0 10px #ff99cc;
-      cursor: pointer;
+      text-align: center;
+      margin-top: 20px;
+      font-weight: bold;
+      color: #ad1457;
+    }
+    audio {
+      display: none;
     }
   </style>
 </head>
 <body>
-  <canvas></canvas>
-  <button id="startBtn">Começar a jornada 💫</button>
 
-  <div class="container" id="mainContent" style="display: none;">
-    <h1>Para o Amor da Minha Vida</h1>
-    <div class="timeline">
-      <div class="event">Desde o dia em que nos conhecemos, minha vida mudou para melhor.</div>
-      <div class="event">Cada momento ao seu lado é um presente que guardo no coração.</div>
-      <div class="event">Você ilumina meus dias com seu sorriso e seu amor incondicional.</div>
-      <div class="event">Não consigo imaginar um futuro sem você nele, meu bem.</div>
-    </div>
-    <img src="imagem.jpg" alt="Nós dois" class="imagem-amor" />
-    <div id="proposal">Quer casar comigo? 💍❤️</div>
+  <h1>Minha Linha do Tempo do Amor</h1>
+
+  <div class="timeline">
+    <div class="point" data-photo="https://i.imgur.com/EhOg0lg.jpg" data-phrase="Nosso primeiro encontro inesquecível">1</div>
+    <div class="point" data-photo="https://i.imgur.com/fPvJo9U.jpg" data-phrase="Passeios e risadas sem fim">2</div>
+    <div class="point" data-photo="https://i.imgur.com/TjyJktL.jpg" data-phrase="Momentos mágicos juntos">3</div>
+    <div class="point" data-photo="https://i.imgur.com/oo9rN5V.jpg" data-phrase="O amor só cresce">4</div>
+    <div class="point" data-photo="https://i.imgur.com/l4vNooo.jpg" data-phrase="Para sempre juntos">5</div>
   </div>
 
-  <audio id="audioPlayer" src="C.mp3" preload="auto"></audio>
+  <div class="photo-container">
+    <img class="photo" src="" alt="Foto do momento" />
+  </div>
+
+  <div class="phrase"></div>
+
+  <div class="suspense">...</div>
+  <div class="proposal"></div>
+
+  <audio src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" preload="auto"></audio>
 
   <script>
-    const canvas = document.querySelector('canvas');
-    const ctx = canvas.getContext('2d');
-    let hearts = [];
+    const timelineElement = document.querySelector('.timeline');
+    const photoContainer = document.querySelector('.photo-container');
+    const photoElement = document.querySelector('.photo');
+    const phraseElement = document.querySelector('.phrase');
+    const suspenseElement = document.querySelector('.suspense');
+    const proposalElement = document.querySelector('.proposal');
+    const audioPlayer = document.querySelector('audio');
 
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+    let audioTriggeredOnce = false; // flag para tocar o áudio só uma vez
+
+    function createLoveParticlesOnClick() {
+      // Você pode implementar seus efeitos de partículas aqui, exemplo simples:
+      console.log("Partículas de amor criadas! ❤️");
+      // Se quiser, posso ajudar a fazer um efeito visual real.
     }
 
-    function createHeart() {
-      const size = Math.random() * 4 + 2;
-      return {
-        x: Math.random() * canvas.width,
-        y: canvas.height + 20,
-        size,
-        speed: Math.random() * 1 + 0.5,
-        alpha: Math.random() * 0.5 + 0.5
-      };
-    }
+    function ativarTimeline() {
+      const points = timelineElement.querySelectorAll('.point');
+      points.forEach((point, index) => {
+        point.addEventListener('click', () => {
+          // Atualiza foto e frase
+          photoElement.src = point.getAttribute('data-photo');
+          phraseElement.textContent = point.getAttribute('data-phrase');
+          photoContainer.style.display = 'block';
+          phraseElement.style.display = 'block';
 
-    function drawHeart(heart) {
-      ctx.beginPath();
-      ctx.fillStyle = `rgba(255, 105, 180, ${heart.alpha})`;
-      ctx.moveTo(heart.x, heart.y);
-      ctx.arc(heart.x - heart.size / 2, heart.y - heart.size / 2, heart.size / 2, Math.PI, 0);
-      ctx.arc(heart.x + heart.size / 2, heart.y - heart.size / 2, heart.size / 2, Math.PI, 0);
-      ctx.lineTo(heart.x, heart.y + heart.size);
-      ctx.closePath();
-      ctx.fill();
-    }
+          createLoveParticlesOnClick();
 
-    function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      hearts = hearts.filter(h => h.y > -20);
-      while (hearts.length < 100) hearts.push(createHeart());
-      hearts.forEach(h => {
-        h.y -= h.speed;
-        drawHeart(h);
+          if (window.innerWidth <= 768) {
+            photoContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+
+          // Tocar áudio só no clique do primeiro ponto e só uma vez
+          if (index === 0 && !audioTriggeredOnce && audioPlayer) {
+            audioPlayer.currentTime = 0;
+            audioPlayer.loop = true;
+            audioPlayer.play()
+              .then(() => {
+                audioTriggeredOnce = true;
+                console.log("Áudio tocando no clique do primeiro ponto.");
+              })
+              .catch(err => {
+                console.error("Erro ao tentar tocar áudio:", err);
+              });
+          }
+
+          // Mostrar suspense e proposta no último ponto
+          if (index === points.length - 1) {
+            suspenseElement.style.display = 'block';
+            proposalElement.style.display = 'none';
+            setTimeout(() => {
+              suspenseElement.style.display = 'none';
+              proposalElement.textContent = "Meu amor, quer ser minha estrela guia para toda a eternidade? 💖";
+              proposalElement.style.display = 'block';
+              if (window.innerWidth <= 768) {
+                proposalElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              }
+            }, 3000);
+          } else {
+            suspenseElement.style.display = 'none';
+            proposalElement.style.display = 'none';
+          }
+        });
       });
-      requestAnimationFrame(animate);
     }
 
-    resizeCanvas();
-    animate();
-    window.addEventListener('resize', resizeCanvas);
-
-    // Lógica do áudio
-    const audioPlayer = document.getElementById('audioPlayer');
-    let audioTriggeredOnce = false;
-
-    document.getElementById('startBtn').addEventListener('click', () => {
-      audioPlayer.currentTime = 0;
-      audioPlayer.loop = true;
-      audioPlayer.play().then(() => {
-        audioTriggeredOnce = true;
-        document.getElementById('startBtn').style.display = 'none';
-        document.getElementById('mainContent').style.display = 'flex';
-      }).catch(err => {
-        console.error("Erro ao iniciar áudio:", err);
-        alert("Toque permitido necessário para reproduzir a música 🎵");
-      });
-    });
-
-    // Interações com os eventos da timeline
-    const events = document.querySelectorAll('.event');
-    let currentEvent = 0;
-
-    events.forEach((event, index) => {
-      event.addEventListener('click', () => {
-        if (index === currentEvent && index < events.length - 1) {
-          event.style.background = '#ffe6f2';
-          currentEvent++;
-        } else if (index === events.length - 1) {
-          document.getElementById('proposal').style.display = 'block';
-        }
-      });
-    });
+    ativarTimeline();
   </script>
+
 </body>
 </html>
-
