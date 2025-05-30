@@ -31,23 +31,12 @@
     ];
 
     const maxFotos = 8;
-    const fotos = [];
-    for (let i = 1; i <= maxFotos; i++) {
-      const img = new Image();
-      img.src = `foto${i}.jpg`;
-      img.onload = () => {
-        if (!fotos.includes(img.src)) {
-          fotos.push(img.src);
-          if (fotos.length === 1) gerarTimeline();
-        }
-      };
-      img.onerror = () => {};
-    }
+    const fotos = Array.from({ length: maxFotos }, (_, i) => `foto${i + 1}.jpg`);
 
     function gerarTimeline() {
       const timeline = document.getElementById('timeline');
       timeline.innerHTML = '';
-      for (let i = 1; i <= fotos.length; i++) {
+      for (let i = 1; i <= maxFotos; i++) {
         const frase = frases[i - 1] || `Mais um capítulo da nossa história juntos.`;
         const btn = document.createElement('button');
         btn.className = 'point';
@@ -59,6 +48,8 @@
       }
       ativarTimeline();
     }
+
+    gerarTimeline();
 
     function ativarTimeline() {
       const points = document.querySelectorAll('.point');
