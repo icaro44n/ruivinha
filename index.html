@@ -4,10 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Linha do Tempo do Amor</title>
-  
-  <!-- Fontes para estilo iOS -->
   <style>
-    /* Fonte estilo iOS */
     body {
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", "Arial", sans-serif;
       background: linear-gradient(to bottom right, #1a1a1a, #2c3e50);
@@ -18,45 +15,40 @@
       padding: 20px;
       min-height: 100vh;
       text-align: center;
-      overflow: auto; /* Permite rolagem */
+      overflow: auto;
     }
-
     h1 {
-      font-size: 2.5rem;
+      font-size: 2.2rem;
       margin-bottom: 30px;
-      text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-      font-family: 'SF Pro Display', sans-serif;
+      text-shadow: 0 0 10px rgba(255,255,255,0.3);
     }
-
     .timeline {
       position: relative;
       width: 100%;
-      max-width: 1000px;
-      height: auto;
-      background: rgba(255, 255, 255, 0.1);
+      max-width: 700px;
+      background: rgba(255,255,255,0.08);
       border-radius: 15px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 0 20px;
       margin-bottom: 30px;
+      min-height: 80px;
     }
-
     .timeline::before {
       content: "";
       position: absolute;
       top: 50%;
-      left: 5%;
-      right: 5%;
+      left: 8%;
+      right: 8%;
       height: 3px;
       background: #ccc;
       transform: translateY(-50%);
       z-index: 0;
     }
-
     .point {
-      width: 24px;
-      height: 24px;
+      width: 32px;
+      height: 32px;
       background: #e74c3c;
       border-radius: 50%;
       position: relative;
@@ -64,160 +56,98 @@
       transition: transform 0.3s, background 0.3s;
       flex-shrink: 0;
       cursor: pointer;
+      border: 3px solid #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      outline: none;
     }
-
-    .point:hover {
-      transform: scale(1.3);
+    .point:focus, .point:hover {
+      transform: scale(1.2);
       background: #f39c12;
+      border-color: #f39c12;
     }
-
     .photo-container {
       display: none;
       width: 90%;
-      max-width: 400px;
+      max-width: 350px;
       border-radius: 15px;
       overflow: hidden;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.4);
       margin-bottom: 20px;
+      background: #222;
     }
-
     .photo-container img {
       width: 100%;
       display: block;
     }
-
     .phrase {
       display: none;
-      font-size: 1rem;
+      font-size: 1.1rem;
       margin-top: 15px;
       color: #f0f0f0;
+      min-height: 2.2em;
     }
-
     .suspense, .proposal {
       display: none;
       margin-top: 25px;
     }
-
     .suspense {
       background: rgba(0,0,0,0.7);
       padding: 20px;
       border-radius: 10px;
       font-size: 1.2rem;
     }
-
     .proposal {
       font-size: 1.5rem;
       color: #f39c12;
       font-weight: bold;
       animation: glow 2s infinite alternate;
     }
-
     @keyframes glow {
       from { text-shadow: 0 0 10px #f39c12; }
       to { text-shadow: 0 0 25px #f39c12; }
     }
-
-    audio {
-      display: none;
-    }
-
-    /* Chuva de corações */
     .heart {
       position: absolute;
       top: -50px;
       font-size: 1.5rem;
-      animation: fall 4s linear infinite;
+      animation: fall 4s linear forwards;
       opacity: 0.8;
+      pointer-events: none;
     }
-
     @keyframes fall {
       to {
         transform: translateY(100vh);
         opacity: 0;
       }
     }
-
-    @media (max-width: 768px) {
-      .timeline {
-        flex-wrap: wrap;
-        height: auto;
-        padding: 15px;
-        gap: 10px;
-      }
-
-      .point {
-        width: 20px;
-        height: 20px;
-      }
-
-      h1 {
-        font-size: 2rem;
-      }
-
-      .photo-container {
-        max-width: 90%;
-      }
-
-      .phrase {
-        font-size: 0.9rem;
-      }
-    }
-
-    @media (max-width: 480px) {
-      h1 {
-        font-size: 1.6rem;
-      }
-
-      .timeline {
-        gap: 8px;
-      }
-
-      .point {
-        width: 18px;
-        height: 18px;
-      }
-
-      .photo-container {
-        max-width: 100%;
-      }
-
-      .phrase {
-        font-size: 0.8rem;
-      }
+    @media (max-width: 700px) {
+      .timeline { max-width: 98%; }
+      .point { width: 26px; height: 26px; font-size: 1rem; }
+      h1 { font-size: 1.5rem; }
+      .photo-container { max-width: 98%; }
     }
   </style>
 </head>
 <body>
-
   <h1>Nosso Relacionamento 💖</h1>
-
   <audio id="audioPlayer" src="C.mp3" preload="auto"></audio>
-
-  <div class="timeline">
-    <!-- 14 pontos -->
-    <div class="point" data-photo="foto1.jpg" data-phrase="Ainda não acreditava💫"></div>
-    <div class="point" data-photo="foto2.jpg" data-phrase=" com o tempo fui caindo na real..."></div>
-    <div class="point" data-photo="foto3.jpg" data-phrase="talvez né, eu já sabia"></div>
-    <div class="point" data-photo="foto4.jpg" data-phrase="Que vc seria minha"></div>
-    <div class="point" data-photo="foto5.jpg" data-phrase="A rosa..."></div>
-    <div class="point" data-photo="foto6.jpg" data-phrase="foi ai que cai na real..."></div>
-    <div class="point" data-photo="foto7.jpg" data-phrase="Que tava me apaixonando"></div>
-    <div class="point" data-photo="foto8.jpg" data-phrase="Nosso primeiro 'eu te amo' 💖"></div>
-    <div class="point" data-photo="foto9.jpg" data-phrase="Um simples momento, eterno 📸"></div>
-    <div class="point" data-photo="foto10.jpg" data-phrase="Cuidar de você é natural 🫶"></div>
-    <div class="point" data-photo="foto11.jpg" data-phrase="A chuva e a gente juntos ☔"></div>
-    <div class="point" data-photo="foto12.jpg" data-phrase="Nossa viagem inesquecível ✈️"></div>
-    <div class="point" data-photo="foto14.jpg" data-phrase="Te amo mais a cada dia ⏳"></div>
+  <div class="timeline" aria-label="Linha do tempo do relacionamento">
+    <button class="point" data-photo="foto1.jpg" data-phrase="O começo de tudo: nosso primeiro olhar." aria-label="Ponto 1">1</button>
+    <button class="point" data-photo="foto2.jpg" data-phrase="Descobrindo juntos o significado do amor." aria-label="Ponto 2">2</button>
+    <button class="point" data-photo="foto3.jpg" data-phrase="Nossos momentos especiais, sempre únicos." aria-label="Ponto 3">3</button>
+    <button class="point" data-photo="foto4.jpg" data-phrase="Superando desafios, crescendo lado a lado." aria-label="Ponto 4">4</button>
+    <button class="point" data-photo="foto5.jpg" data-phrase="Prontos para o próximo capítulo juntos?" aria-label="Ponto 5">5</button>
   </div>
-
-  <div class="photo-container" id="photoContainer">
-    <img id="photo" src="" alt="Foto" />
+  <div class="photo-container" id="photoContainer" aria-live="polite">
+    <img id="photo" src="" alt="Foto do momento" />
   </div>
-
   <div class="phrase" id="phrase"></div>
   <div class="suspense" id="suspense">Espere um pouquinho... 💬</div>
   <div class="proposal" id="proposal">Quer namorar comigo? 💍</div>
-
   <script>
     const points = document.querySelectorAll('.point');
     const photoContainer = document.getElementById('photoContainer');
@@ -229,26 +159,26 @@
 
     points.forEach((point, index) => {
       point.addEventListener('click', () => {
+        // Mostra foto e frase
         photo.src = point.getAttribute('data-photo');
         phrase.textContent = point.getAttribute('data-phrase');
-
         photoContainer.style.display = 'block';
         phrase.style.display = 'block';
 
+        // Toca música no primeiro ponto
         if (index === 0) {
           audio.currentTime = 0;
           audio.play();
         }
 
+        // Proposta no último ponto
         if (index === points.length - 1) {
+          suspense.style.display = 'block';
           setTimeout(() => {
-            suspense.style.display = 'block';
-          }, 1000);
-          
-          setTimeout(() => {
+            suspense.style.display = 'none';
             proposal.style.display = 'block';
-            createHeartRain();  // Inicia a chuva de corações
-          }, 4000);
+            createHeartRain();
+          }, 2000);
         } else {
           suspense.style.display = 'none';
           proposal.style.display = 'none';
@@ -257,25 +187,19 @@
     });
 
     function createHeartRain() {
-      for (let i = 0; i < 10; i++) {  // Agora a quantidade de corações é 10
+      for (let i = 0; i < 10; i++) {
         const heart = document.createElement('div');
         heart.classList.add('heart');
         heart.textContent = '❤️';
-        heart.style.left = `${Math.random() * 100}vw`; // Posição aleatória
-        heart.style.animationDuration = `${Math.random() * 2 + 3}s`; // Duração aleatória
+        heart.style.left = `${Math.random() * 100}vw`;
+        heart.style.animationDuration = `${Math.random() * 2 + 3}s`;
         document.body.appendChild(heart);
-        
-        // Remove o coração após a animação
-        setTimeout(() => {
-          heart.remove();
-        }, 4000); // Remove antes de desaparecer completamente
+        setTimeout(() => heart.remove(), 4000);
       }
     }
-
-    // Chuva de corações contínua durante a interação
-    setInterval(createHeartRain, 2000);  // Agora o intervalo é 2 segundos para não sobrecarregar
+    // Chuva de corações contínua (opcional, pode remover se quiser só na proposta)
+    // setInterval(createHeartRain, 4000);
   </script>
-
 </body>
 </html>
 
