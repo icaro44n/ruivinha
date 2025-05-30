@@ -318,10 +318,10 @@
   </svg>
   <h1>💖</h1>
   <audio id="audioPlayer" preload="auto" loop>
-    <source src="C.mp3" type="audio/mp3">
+    <source src="./C.mp3" type="audio/mpeg">
     Desculpe, seu navegador não suporta o elemento de áudio ou o arquivo C.mp3 não foi encontrado.
   </audio>
-  <div class="error-message" id="audioError">Não foi possível carregar o áudio. Verifique se o arquivo C.mp3 está na pasta audio/.</div>
+  <div class="error-message" id="audioError">Não foi possível carregar o áudio. Verifique se o arquivo C.mp3 está na pasta raiz.</div>
   <div class="timeline" id="timeline" aria-label="Linha do tempo do nosso amor"></div>
   <div class="photo-container" id="photoContainer" aria-live="polite">
     <img id="photo" src="" alt="Foto do momento" />
@@ -492,7 +492,7 @@
 
     // Linha do tempo
     const maxFotos = 7;
-    const fotos = Array.from({ length: maxFotos }, (_, i) => `imagens/fotos${i + 1}.jpg`);
+    const fotos = Array.from({ length: maxFotos }, (_, i) => `./foto${i + 1}.jpg`);
     const frases = [
       "O dia em que nossos olhares se cruzaram pela primeira vez.",
       "O dia em que te deixei tímida kkkk",
