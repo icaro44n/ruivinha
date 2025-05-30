@@ -1,142 +1,381 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Timeline com Áudio e Proposta</title>
+  <title>Linha do Tempo do Nosso Amor</title>
   <style>
+    html {
+      height: 100%;
+    }
     body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      background: #fff0f6;
-      color: #333;
+      background: linear-gradient(45deg, #2a0a4a, #4a0a6a, #ffccff);
+      background-size: 300%;
+      background-attachment: fixed;
+      animation: romanticGradient 12s ease infinite;
+      font-family: 'Dancing Script', cursive;
+      text-align: center;
+      padding: 2rem;
+      color: #fff;
+      overflow-x: hidden;
+      position: relative;
+      margin: 0;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+    @keyframes romanticGradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    canvas#stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      opacity: 0.7;
+    }
+    h1 {
+      font-size: 3.5rem;
+      text-shadow: 0 0 10px #ff99cc, 0 0 20px #ff69b4;
+      animation: heartPulse 3s ease-in-out infinite;
+      margin-bottom: 1.5rem;
+      margin-top: 1rem;
+    }
+    @keyframes heartPulse {
+      0% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.8; }
     }
     .timeline {
+      margin: 2rem auto;
       display: flex;
-      gap: 15px;
-      margin-bottom: 20px;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
+      padding: 0 10px;
     }
     .point {
-      width: 30px;
-      height: 30px;
-      background: #ff4081;
+      background: radial-gradient(circle, #ffccff 20%, #ff69b4 80%);
+      border: 3px solid #ff99cc;
       border-radius: 50%;
+      width: 60px;
+      height: 60px;
       cursor: pointer;
-      border: 2px solid #c2185b;
-      transition: background 0.3s;
+      font-size: 1.8rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: white;
-      font-weight: bold;
-      user-select: none;
+      box-shadow: 0 0 12px #ff99cc;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      z-index: 1;
     }
     .point:hover {
-      background: #c2185b;
+      transform: scale(1.2);
+      box-shadow: 0 0 20px #ff69b4, 0 0 40px #ff99cc;
+      animation: heartbeat 1s infinite;
+    }
+    @keyframes heartbeat {
+      0% { transform: scale(1.2); }
+      50% { transform: scale(1.3); }
+      100% { transform: scale(1.2); }
     }
     .photo-container {
       display: none;
-      margin-bottom: 10px;
-      text-align: center;
+      margin: 1.5rem auto;
+      max-width: 90vw;
+      position: relative;
+      animation: floatIn 1s ease;
     }
-    .photo-container img.photo {
-      max-width: 200px;
-      border-radius: 10px;
-      border: 3px solid #ff80ab;
-      box-shadow: 0 0 15px #f48fb1;
+    @keyframes floatIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .photo-container img {
+      width: 100%;
+      max-width: 300px;
+      height: 300px;
+      object-fit: cover;
+      clip-path: url(#heart-clip);
+      border: 4px solid #ff99cc;
+      box-shadow: 0 0 15px #ff69b4, 0 0 30px #ff99cc;
+      transition: transform 0.3s ease;
+      position: relative;
+      z-index: 1;
+    }
+    .photo-container img:hover {
+      transform: scale(1.05);
     }
     .phrase {
       display: none;
-      font-size: 1.2rem;
-      margin-bottom: 20px;
-      text-align: center;
-      font-style: italic;
-      color: #880e4f;
+      font-size: 1.5rem;
+      color: #ffccff;
+      text-shadow: 0 0 8px #ff69b4;
+      margin-top: 1rem;
+      max-width: 90%;
+      margin-left: auto;
+      margin-right: auto;
+      animation: fadeIn 1s ease;
     }
     .suspense, .proposal {
       display: none;
-      font-size: 1.5rem;
-      text-align: center;
-      margin-top: 20px;
-      font-weight: bold;
-      color: #ad1457;
+      font-size: 1.7rem;
+      color: #ff69b4;
+      text-shadow: 0 0 10px #ff99cc;
+      margin-top: 1.5rem;
+      animation: fadeIn 1s ease;
+      padding: 0 10px;
     }
-    audio {
-      display: none;
+    #resetBtn {
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      padding: 12px 24px;
+      background: transparent;
+      border: 2px solid #ff99cc;
+      border-radius: 20px;
+      color: #fff;
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.3rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-shadow: 0 0 5px #ff69b4;
+    }
+    #resetBtn:hover {
+      background: #ff69b4;
+      box-shadow: 0 0 15px #ff99cc;
+      transform: scale(1.05);
+    }
+    .audio-controls {
+      margin: 1rem auto;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+    .audio-btn {
+      padding: 10px 20px;
+      background: transparent;
+      border: 2px solid #ff99cc;
+      border-radius: 20px;
+      color: #fff;
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-shadow: 0 0 5px #ff69b4;
+    }
+    .audio-btn:hover {
+      background: #ff69b4;
+      box-shadow: 0 0 15px #ff99cc;
+      transform: scale(1.05);
+    }
+    .romantic-particle {
+      position: fixed;
+      top: -20px;
+      font-size: 1.5rem;
+      color: #ff99cc;
+      animation: fall linear forwards;
+      z-index: -1;
+      pointer-events: none;
+    }
+    @keyframes fall {
+      to {
+        transform: translateY(105vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .constellation-line {
+      position: absolute;
+      background: linear-gradient(to right, transparent, #ff99cc, transparent);
+      height: 2px;
+      z-index: 0;
+      transform-origin: 0 0;
+      opacity: 0.7;
+    }
+    @media (max-width: 768px) {
+      h1 { font-size: 3rem; }
+      .timeline { gap: 15px; }
+    }
+    @media (max-width: 480px) {
+      body { padding: 1rem; }
+      h1 { font-size: 2.2rem; margin-bottom: 1rem; }
+      .timeline { gap: 10px; margin: 1rem auto; }
+      .point { width: 50px; height: 50px; font-size: 1.5rem; }
+      .photo-container { margin: 1rem auto; }
+      .photo-container img {
+        max-width: 200px; width: 70vw; height: 70vw; max-height: 200px;
+      }
+      .phrase, .suspense, .proposal { font-size: 1.2rem; max-width: 95%; }
+      .suspense, .proposal { font-size: 1.3rem; }
+      .audio-btn, #resetBtn { padding: 8px 16px; font-size: 1rem; }
     }
   </style>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-
-  <h1>Minha Linha do Tempo do Amor</h1>
-
-  <div class="timeline">
-    <div class="point" data-photo="https://i.imgur.com/EhOg0lg.jpg" data-phrase="Nosso primeiro encontro inesquecível">1</div>
-    <div class="point" data-photo="https://i.imgur.com/fPvJo9U.jpg" data-phrase="Passeios e risadas sem fim">2</div>
-    <div class="point" data-photo="https://i.imgur.com/TjyJktL.jpg" data-phrase="Momentos mágicos juntos">3</div>
-    <div class="point" data-photo="https://i.imgur.com/oo9rN5V.jpg" data-phrase="O amor só cresce">4</div>
-    <div class="point" data-photo="https://i.imgur.com/l4vNooo.jpg" data-phrase="Para sempre juntos">5</div>
+  <canvas id="stars"></canvas>
+  <svg width="0" height="0">
+    <defs>
+      <clipPath id="heart-clip" clipPathUnits="objectBoundingBox">
+        <path d="M0.5 0.97C0.24 0.77 0 0.52 0 0.27 0 0.12 0.12 0 0.27 0 0.39 0 0.5 0.09 0.5 0.09S0.61 0 0.73 0C0.88 0 1 0.12 1 0.27 1 0.52 0.76 0.77 0.5 0.97Z"/>
+      </clipPath>
+    </defs>
+  </svg>
+  <h1>💖</h1>
+  <audio id="audioPlayer" src="C.mp3" preload="auto" loop></audio>
+  <div class="timeline" id="timeline" aria-label="Linha do tempo do nosso amor"></div>
+  <div class="photo-container" id="photoContainer" aria-live="polite">
+    <img id="photo" src="" alt="Foto do momento" />
   </div>
-
-  <div class="photo-container">
-    <img class="photo" src="" alt="Foto do momento" />
+  <div class="phrase" id="phrase"></div>
+  <div class="suspense" id="suspense">Um momento, meu amor... 🌸</div>
+  <div class="proposal" id="proposal"></div>
+  <div class="audio-controls">
+    <button id="playBtn" class="audio-btn" aria-label="Tocar música">Tocar 🌸</button>
+    <button id="pauseBtn" class="audio-btn" aria-label="Pausar música">Pausar 🌸</button>
   </div>
-
-  <div class="phrase"></div>
-
-  <div class="suspense">...</div>
-  <div class="proposal"></div>
-
-  <audio src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" preload="auto"></audio>
+  <button id="resetBtn" aria-label="Reiniciar a jornada do amor">Recomeçar o Sonho 🌷</button>
 
   <script>
-    const timelineElement = document.querySelector('.timeline');
-    const photoContainer = document.querySelector('.photo-container');
-    const photoElement = document.querySelector('.photo');
-    const phraseElement = document.querySelector('.phrase');
-    const suspenseElement = document.querySelector('.suspense');
-    const proposalElement = document.querySelector('.proposal');
-    const audioPlayer = document.querySelector('audio');
+    const canvas = document.getElementById('stars');
+    const ctx = canvas.getContext('2d');
+    let stars = [];
+    const numStars = 100;
 
-    let audioTriggeredOnce = false; // flag para tocar o áudio só uma vez
-
-    function createLoveParticlesOnClick() {
-      // Você pode implementar seus efeitos de partículas aqui, exemplo simples:
-      console.log("Partículas de amor criadas! ❤️");
-      // Se quiser, posso ajudar a fazer um efeito visual real.
+    function setupStars() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      stars = [];
+      for (let i = 0; i < numStars; i++) {
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          radius: Math.random() * 1.2 + 0.3,
+          alpha: Math.random() * 0.5 + 0.3,
+          speed: (Math.random() - 0.5) * 0.2
+        });
+      }
     }
+
+    function animateStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      stars.forEach(star => {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 204, 255, ${star.alpha})`;
+        ctx.fill();
+        star.alpha += star.speed / 20;
+        if (star.alpha > 0.8 || star.alpha < 0.2) star.speed = -star.speed;
+        if (star.x > canvas.width + star.radius) star.x = -star.radius;
+        if (star.x < -star.radius) star.x = canvas.width + star.radius;
+        if (star.y > canvas.height + star.radius) star.y = -star.radius;
+        if (star.y < -star.radius) star.y = canvas.height + star.radius;
+      });
+      requestAnimationFrame(animateStars);
+    }
+    setupStars();
+    animateStars();
+
+    const maxFotos = 7;
+    const fotos = Array.from({ length: maxFotos }, (_, i) => `foto${i + 1}.jpg`);
+    const frases = [
+      "O dia em que nossos olhares se cruzaram pela primeira vez. ✨",
+      "Nossa primeira aventura juntos, cheia de risos. 💕",
+      "Aquele momento em que percebi que era você. 🌹",
+      "Juntos, construindo memórias que durarão para sempre. 💖",
+      "Cada abraço, um pedaço do céu na terra. 🌸",
+      "Nossos sonhos entrelaçados sob as estrelas. 🌌",
+      "O começo de uma eternidade ao seu lado. 💞"
+    ];
+
+    const timelineElement = document.getElementById('timeline');
+    const photoContainer = document.getElementById('photoContainer');
+    const photoElement = document.getElementById('photo');
+    const phraseElement = document.getElementById('phrase');
+    const suspenseElement = document.getElementById('suspense');
+    const proposalElement = document.getElementById('proposal');
+    const audioPlayer = document.getElementById('audioPlayer');
+    const playBtn = document.getElementById('playBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
+
+    let audioTriggeredOnce = false;
+
+    function gerarTimeline() {
+      timelineElement.innerHTML = '';
+      for (let i = 0; i < maxFotos; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'point';
+        btn.setAttribute('data-photo', fotos[i]);
+        btn.setAttribute('data-phrase', frases[i]);
+        btn.setAttribute('aria-label', `Momento ${i + 1}: ${frases[i]}`);
+        btn.innerHTML = '<span aria-hidden="true">💖</span>';
+        timelineElement.appendChild(btn);
+      }
+      requestAnimationFrame(() => {
+        drawConstellation();
+        ativarTimeline();
+      });
+    }
+
+    function drawConstellation() {
+      const existingLines = timelineElement.querySelectorAll('.constellation-line');
+      existingLines.forEach(line => line.remove());
+      const points = timelineElement.querySelectorAll('.point');
+      if (points.length < 2) return;
+      for (let i = 0; i < points.length - 1; i++) {
+        const point1 = points[i]; const point2 = points[i+1];
+        const rect1 = point1.getBoundingClientRect(); const rect2 = point2.getBoundingClientRect();
+        const timelineRect = timelineElement.getBoundingClientRect();
+        const x1 = rect1.left + rect1.width / 2 - timelineRect.left;
+        const y1 = rect1.top + rect1.height / 2 - timelineRect.top;
+        const x2 = rect2.left + rect2.width / 2 - timelineRect.left;
+        const y2 = rect2.top + rect2.height / 2 - timelineRect.top;
+        const length = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+        const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+        const line = document.createElement('div');
+        line.className = 'constellation-line';
+        line.style.width = `${length}px`;
+        line.style.transform = `translate(${x1}px, ${y1}px) rotate(${angle}deg)`;
+        timelineElement.appendChild(line);
+      }
+    }
+    gerarTimeline();
 
     function ativarTimeline() {
       const points = timelineElement.querySelectorAll('.point');
       points.forEach((point, index) => {
         point.addEventListener('click', () => {
-          // Atualiza foto e frase
           photoElement.src = point.getAttribute('data-photo');
           phraseElement.textContent = point.getAttribute('data-phrase');
           photoContainer.style.display = 'block';
           phraseElement.style.display = 'block';
-
           createLoveParticlesOnClick();
 
           if (window.innerWidth <= 768) {
             photoContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
           }
 
-          // Tocar áudio só no clique do primeiro ponto e só uma vez
           if (index === 0 && !audioTriggeredOnce && audioPlayer) {
+            console.log("Primeiro ponto clicado. Tentando tocar o áudio.");
             audioPlayer.currentTime = 0;
-            audioPlayer.loop = true;
             audioPlayer.play()
               .then(() => {
+                console.log("Áudio 'C.mp3' começou a tocar em loop.");
                 audioTriggeredOnce = true;
-                console.log("Áudio tocando no clique do primeiro ponto.");
               })
               .catch(err => {
-                console.error("Erro ao tentar tocar áudio:", err);
+                console.error("Erro ao tentar tocar o áudio 'C.mp3':", err);
               });
           }
 
-          // Mostrar suspense e proposta no último ponto
           if (index === points.length - 1) {
             suspenseElement.style.display = 'block';
             proposalElement.style.display = 'none';
@@ -156,8 +395,92 @@
       });
     }
 
-    ativarTimeline();
-  </script>
+    playBtn.addEventListener('click', () => {
+      if (audioPlayer) {
+        audioPlayer.currentTime = 0;
+        audioPlayer.play()
+          .then(() => {
+            console.log("Áudio 'C.mp3' iniciado pelos controles.");
+            audioTriggeredOnce = true;
+          })
+          .catch(err => {
+            console.error("Erro ao tentar tocar o áudio 'C.mp3':", err);
+          });
+      }
+    });
 
+    pauseBtn.addEventListener('click', () => {
+      if (audioPlayer) {
+        audioPlayer.pause();
+        console.log("Áudio 'C.mp3' pausado pelos controles.");
+      }
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      photoElement.src = '';
+      phraseElement.style.display = 'none';
+      proposalElement.style.display = 'none';
+      suspenseElement.style.display = 'none';
+      photoContainer.style.display = 'none';
+      if (audioPlayer) {
+        audioPlayer.pause();
+        audioPlayer.currentTime = 0;
+        audioTriggeredOnce = false;
+        console.log("Áudio pausado e resetado pelo botão Recomeçar.");
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    function createLoveParticlesOnClick() {
+      const numParticles = window.innerWidth <= 480 ? 8 : 15;
+      for (let i = 0; i < numParticles; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('romantic-particle');
+        particle.textContent = Math.random() > 0.5 ? '💖' : '🌸';
+        particle.style.left = `${Math.random() * 100}vw`;
+        particle.style.top = `${Math.random() * 50 + 25}vh`;
+        particle.style.fontSize = `${Math.random() * 0.7 + 0.8}rem`;
+        const fallDuration = Math.random() * 1.5 + 1;
+        particle.style.animationName = 'fallOnClick';
+        particle.style.animationDuration = `${fallDuration}s`;
+        particle.style.animationTimingFunction = 'ease-in';
+        document.body.appendChild(particle);
+        setTimeout(() => particle.remove(), fallDuration * 1000);
+      }
+    }
+
+    const styleSheet = document.createElement("style");
+    styleSheet.innerText = `
+      @keyframes fallOnClick {
+        to {
+          transform: translateY(100vh) rotate(${Math.random() * 360 - 180}deg);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(styleSheet);
+
+    function createContinuousRomanticParticle() {
+      const particle = document.createElement('div');
+      particle.classList.add('romantic-particle');
+      particle.textContent = Math.random() > 0.5 ? '💖' : '🌸';
+      particle.style.left = `${Math.random() * 98}vw`;
+      particle.style.fontSize = `${Math.random() * 0.6 + 1.0}rem`;
+      particle.style.animationName = 'fall';
+      particle.style.animationDuration = `${Math.random() * 3 + 5}s`;
+      document.body.appendChild(particle);
+      setTimeout(() => particle.remove(), 8000);
+    }
+    setInterval(createContinuousRomanticParticle, window.innerWidth <= 480 ? 1500 : 700);
+
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+      setupStars();
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        gerarTimeline();
+      }, 250);
+    });
+  </script>
 </body>
 </html>
