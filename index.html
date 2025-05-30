@@ -6,40 +6,69 @@
   <title>Linha do Tempo do Nosso Amor</title>
   <style>
     html {
-      height: 100%; /* Ajuda com 100vh em alguns casos */
+      height: 100%;
     }
     body {
-      background: linear-gradient(45deg, #2a0a4a, #4a0a6a, #ffccff);
-      background-size: 300%; /* Importante para a animação do gradiente */
-      background-attachment: fixed; /* FIXA O FUNDO NA JANELA DE VISUALIZAÇÃO */
-      animation: romanticGradient 12s ease infinite;
+      background: linear-gradient(45deg, #0a0a23, #1e3a5f, #4682b4);
+      background-size: 300%;
+      background-attachment: fixed;
+      animation: auroraGradient 10s ease infinite;
       font-family: 'Dancing Script', cursive;
       text-align: center;
       padding: 2rem;
       color: #fff;
-      overflow-x: hidden; /* Prevent horizontal scroll */
+      overflow-x: hidden;
       position: relative;
       margin: 0;
-      min-height: 100vh; /* Garante que o body ocupe pelo menos a altura total da tela */
-      box-sizing: border-box; /* Para que o padding não aumente a altura total além de 100vh */
+      min-height: 100vh;
+      box-sizing: border-box;
     }
-    @keyframes romanticGradient {
+    @keyframes auroraGradient {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
-    canvas#stars {
+    canvas#aurora {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       z-index: -2;
-      opacity: 0.7;
+      opacity: 0.6;
+    }
+    canvas#audioWave {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100px;
+      z-index: -1;
+      opacity: 0.5;
+    }
+    .aurora-veil {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        to bottom,
+        rgba(70, 130, 180, 0.3) 0%,
+        rgba(0, 255, 255, 0.5) 30%,
+        transparent 70%
+      );
+      animation: auroraWave 8s ease-in-out infinite;
+      z-index: -3;
+    }
+    @keyframes auroraWave {
+      0% { transform: translateY(0); opacity: 0.5; }
+      50% { transform: translateY(-20px); opacity: 0.7; }
+      100% { transform: translateY(0); opacity: 0.5; }
     }
     h1 {
       font-size: 3.5rem;
-      text-shadow: 0 0 10px #ff99cc, 0 0 20px #ff69b4;
+      text-shadow: 0 0 10px #00ffff, 0 0 20px #4682b4;
       animation: heartPulse 3s ease-in-out infinite;
       margin-bottom: 1.5rem;
       margin-top: 1rem;
@@ -60,8 +89,8 @@
       padding: 0 10px;
     }
     .point {
-      background: radial-gradient(circle, #ffccff 20%, #ff69b4 80%);
-      border: 3px solid #ff99cc;
+      background: radial-gradient(circle, #e0ffff 20%, #00ced1 80%);
+      border: 3px solid #00ffff;
       border-radius: 50%;
       width: 60px;
       height: 60px;
@@ -70,14 +99,14 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 12px #ff99cc;
+      box-shadow: 0 0 12px #00ffff;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       position: relative;
       z-index: 1;
     }
     .point:hover {
       transform: scale(1.2);
-      box-shadow: 0 0 20px #ff69b4, 0 0 40px #ff99cc;
+      box-shadow: 0 0 20px #00ced1, 0 0 40px #00ffff;
       animation: heartbeat 1s infinite;
     }
     @keyframes heartbeat {
@@ -102,8 +131,8 @@
       height: 300px;
       object-fit: cover;
       clip-path: url(#heart-clip);
-      border: 4px solid #ff99cc;
-      box-shadow: 0 0 15px #ff69b4, 0 0 30px #ff99cc;
+      border: 4px solid #00ffff;
+      box-shadow: 0 0 15px #00ced1, 0 0 30px #00ffff;
       transition: transform 0.3s ease;
       position: relative;
       z-index: 1;
@@ -114,8 +143,8 @@
     .phrase {
       display: none;
       font-size: 1.5rem;
-      color: #ffccff;
-      text-shadow: 0 0 8px #ff69b4;
+      color: #e0ffff;
+      text-shadow: 0 0 8px #00ced1;
       margin-top: 1rem;
       max-width: 90%;
       margin-left: auto;
@@ -125,8 +154,8 @@
     .suspense, .proposal {
       display: none;
       font-size: 1.7rem;
-      color: #ff69b4;
-      text-shadow: 0 0 10px #ff99cc;
+      color: #00ffff;
+      text-shadow: 0 0 10px #00ced1;
       margin-top: 1.5rem;
       animation: fadeIn 1s ease;
       padding: 0 10px;
@@ -136,25 +165,83 @@
       margin-bottom: 1rem;
       padding: 12px 24px;
       background: transparent;
-      border: 2px solid #ff99cc;
+      border: 2px solid #00ffff;
       border-radius: 20px;
       color: #fff;
       font-family: 'Dancing Script', cursive;
       font-size: 1.3rem;
       cursor: pointer;
       transition: all 0.3s ease;
-      text-shadow: 0 0 5px #ff69b4;
+      text-shadow: 0 0 5px #00ced1;
     }
     #resetBtn:hover {
-      background: #ff69b4;
-      box-shadow: 0 0 15px #ff99cc;
+      background: #00ced1;
+      box-shadow: 0 0 15px #00ffff;
       transform: scale(1.05);
     }
-    .romantic-particle {
+    .audio-controls {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .audio-btn {
+      background: transparent;
+      border: 2px solid #00ffff;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      color: #fff;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .audio-btn:hover {
+      background: #00ced1;
+      box-shadow: 0 0 10px #00ffff;
+    }
+    #volumeSlider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100px;
+      height: 6px;
+      background: #e0ffff;
+      border-radius: 5px;
+      outline: none;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    #volumeSlider:hover {
+      opacity: 1;
+    }
+    #volumeSlider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      background: #00ced1;
+      border: 2px solid #00ffff;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    #volumeSlider::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      background: #00ced1;
+      border: 2px solid #00ffff;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    .aurora-particle {
       position: fixed;
       top: -20px;
       font-size: 1.5rem;
-      color: #ff99cc;
+      color: #00ffff;
       animation: fall linear forwards;
       z-index: -1;
       pointer-events: none;
@@ -171,13 +258,12 @@
     }
     .constellation-line {
       position: absolute;
-      background: linear-gradient(to right, transparent, #ff99cc, transparent);
+      background: linear-gradient(to right, transparent, #00ffff, transparent);
       height: 2px;
       z-index: 0;
       transform-origin: 0 0;
       opacity: 0.7;
     }
-
     @media (max-width: 768px) {
       h1 { font-size: 3rem; }
       .timeline { gap: 15px; }
@@ -193,13 +279,16 @@
       }
       .phrase, .suspense, .proposal { font-size: 1.2rem; max-width: 95%; }
       .suspense, .proposal { font-size: 1.3rem; }
-      #resetBtn { padding: 10px 20px; font-size: 1.1rem; }
+      #resetBtn, .audio-btn { padding: 10px 20px; font-size: 1.1rem; }
+      #volumeSlider { width: 80px; }
     }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <canvas id="stars"></canvas>
+  <div class="aurora-veil"></div>
+  <canvas id="aurora"></canvas>
+  <canvas id="audioWave"></canvas>
   <svg width="0" height="0">
     <defs>
       <clipPath id="heart-clip" clipPathUnits="objectBoundingBox">
@@ -208,65 +297,177 @@
     </defs>
   </svg>
   <h1>💖</h1>
-  <audio id="audioPlayer" src="C.mp3" preload="auto"></audio>
+  <audio id="audioPlayer" preload="auto" loop>
+    <source src="./audio/C.mp3" type="audio/mpeg">
+    <source src="https://cdn.pixabay.com/audio/2023/01/15/audio_9c2e9b7c8f.mp3" type="audio/mpeg">
+    Desculpe, seu navegador não suporta o elemento de áudio.
+  </audio>
   <div class="timeline" id="timeline" aria-label="Linha do tempo do nosso amor"></div>
   <div class="photo-container" id="photoContainer" aria-live="polite">
     <img id="photo" src="" alt="Foto do momento" />
   </div>
   <div class="phrase" id="phrase"></div>
-  <div class="suspense" id="suspense">Um momento, meu amor... 🌸</div>
-  <div class="proposal" id="proposal"></div> <button id="resetBtn" aria-label="Reiniciar a jornada do amor">Recomeçar o Sonho 🌷</button>
+  <div class="suspense" id="suspense">Um instante, meu amor... 🌌</div>
+  <div class="proposal" id="proposal"></div>
+  <button id="resetBtn" aria-label="Reiniciar a jornada do amor">Recomeçar o Sonho ✨</button>
+  <div class="audio-controls">
+    <button id="playPauseBtn" class="audio-btn" aria-label="Tocar ou pausar áudio">▶️</button>
+    <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.5" aria-label="Controle de volume">
+  </div>
 
   <script>
-    const canvas = document.getElementById('stars');
-    const ctx = canvas.getContext('2d');
-    let stars = [];
-    const numStars = 100;
+    // Auroras e estrelas
+    const auroraCanvas = document.getElementById('aurora');
+    const auroraCtx = auroraCanvas.getContext('2d');
+    auroraCanvas.width = window.innerWidth;
+    auroraCanvas.height = window.innerHeight;
 
-    function setupStars() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      stars = [];
-      for (let i = 0; i < numStars; i++) {
-        stars.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          radius: Math.random() * 1.2 + 0.3,
-          alpha: Math.random() * 0.5 + 0.3,
-          speed: (Math.random() - 0.5) * 0.2
-        });
-      }
+    const stars = [];
+    const auroraBands = [
+      { x: 0, width: auroraCanvas.width / 3, offset: 0, speed: 0.02 },
+      { x: auroraCanvas.width / 3, width: auroraCanvas.width / 3, offset: 50, speed: -0.015 },
+      { x: (auroraCanvas.width / 3) * 2, width: auroraCanvas.width / 3, offset: 100, speed: 0.01 }
+    ];
+
+    for (let i = 0; i < 100; i++) {
+      stars.push({
+        x: Math.random() * auroraCanvas.width,
+        y: Math.random() * auroraCanvas.height,
+        radius: Math.random() * 1 + 0.3,
+        alpha: Math.random() * 0.5 + 0.3,
+        speed: (Math.random() - 0.5) * 0.2
+      });
     }
 
-    function animateStars() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    function animateAurora() {
+      auroraCtx.clearRect(0, 0, auroraCanvas.width, auroraCanvas.height);
       stars.forEach(star => {
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 204, 255, ${star.alpha})`;
-        ctx.fill();
+        auroraCtx.beginPath();
+        auroraCtx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        auroraCtx.fillStyle = `rgba(224, 255, 255, ${star.alpha})`;
+        auroraCtx.fill();
         star.alpha += star.speed / 20;
         if (star.alpha > 0.8 || star.alpha < 0.2) star.speed = -star.speed;
-        if (star.x > canvas.width + star.radius) star.x = -star.radius;
-        if (star.x < -star.radius) star.x = canvas.width + star.radius;
-        if (star.y > canvas.height + star.radius) star.y = -star.radius;
-        if (star.y < -star.radius) star.y = canvas.height + star.radius;
       });
-      requestAnimationFrame(animateStars);
+      auroraBands.forEach(band => {
+        const gradient = auroraCtx.createLinearGradient(0, 0, 0, auroraCanvas.height);
+        gradient.addColorStop(0, 'rgba(0, 255, 255, 0)');
+        gradient.addColorStop(0.3, 'rgba(0, 255, 255, 0.3)');
+        gradient.addColorStop(0.5, 'rgba(70, 130, 180, 0.2)');
+        gradient.addColorStop(1, 'rgba(0, 255, 255, 0)');
+        auroraCtx.fillStyle = gradient;
+        auroraCtx.beginPath();
+        auroraCtx.moveTo(band.x, 0);
+        for (let y = 0; y < auroraCanvas.height; y += 10) {
+          const offset = Math.sin((y + band.offset) * 0.02) * 50;
+          auroraCtx.lineTo(band.x + offset, y);
+        }
+        auroraCtx.lineTo(band.x, auroraCanvas.height);
+        auroraCtx.lineTo(band.x + band.width, auroraCanvas.height);
+        for (let y = auroraCanvas.height; y >= 0; y -= 10) {
+          const offset = Math.sin((y + band.offset) * 0.02) * 50;
+          auroraCtx.lineTo(band.x + band.width + offset, y);
+        }
+        auroraCtx.closePath();
+        auroraCtx.fill();
+        band.offset += band.speed;
+      });
+      requestAnimationFrame(animateAurora);
     }
-    setupStars();
-    animateStars();
+    animateAurora();
 
+    // Ondas de áudio
+    const waveCanvas = document.getElementById('audioWave');
+    const waveCtx = waveCanvas.getContext('2d');
+    waveCanvas.width = window.innerWidth;
+    waveCanvas.height = 100;
+
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const audioPlayer = document.getElementById('audioPlayer');
+    const source = audioContext.createMediaElementSource(audioPlayer);
+    const analyser = audioContext.createAnalyser();
+    analyser.fftSize = 256;
+    source.connect(analyser);
+    analyser.connect(audioContext.destination);
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+
+    function animateAudioWave() {
+      waveCtx.clearRect(0, 0, waveCanvas.width, waveCanvas.height);
+      analyser.getByteFrequencyData(dataArray);
+      const barWidth = waveCanvas.width / bufferLength;
+      let x = 0;
+      for (let i = 0; i < bufferLength; i++) {
+        const barHeight = dataArray[i] / 2;
+        waveCtx.fillStyle = `rgba(0, 255, 255, ${barHeight / 100})`;
+        waveCtx.fillRect(x, waveCanvas.height - barHeight, barWidth, barHeight);
+        x += barWidth + 1;
+      }
+      requestAnimationFrame(animateAudioWave);
+    }
+    animateAudioWave();
+
+    window.addEventListener('resize', () => {
+      auroraCanvas.width = window.innerWidth;
+      auroraCanvas.height = window.innerHeight;
+      waveCanvas.width = window.innerWidth;
+      waveCanvas.height = 100;
+    });
+
+    // Controles de áudio
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const volumeSlider = document.getElementById('volumeSlider');
+    let isPlaying = false;
+
+    audioPlayer.volume = 0.5;
+    const gainNode = audioContext.createGain();
+    source.connect(gainNode);
+    gainNode.connect(analyser);
+
+    function fadeIn() {
+      gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+      gainNode.gain.linearRampToValueAtTime(audioPlayer.volume, audioContext.currentTime + 1);
+    }
+
+    function fadeOut(callback) {
+      gainNode.gain.setValueAtTime(audioPlayer.volume, audioContext.currentTime);
+      gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 1);
+      setTimeout(callback, 1000);
+    }
+
+    playPauseBtn.addEventListener('click', () => {
+      if (audioContext.state === 'suspended') audioContext.resume();
+      if (isPlaying) {
+        fadeOut(() => {
+          audioPlayer.pause();
+          playPauseBtn.textContent = '▶️';
+          isPlaying = false;
+        });
+      } else {
+        audioPlayer.play().then(() => {
+          fadeIn();
+          playPauseBtn.textContent = '⏸️';
+          isPlaying = true;
+        }).catch(err => console.error('Erro ao tocar áudio:', err));
+      }
+    });
+
+    volumeSlider.addEventListener('input', () => {
+      audioPlayer.volume = volumeSlider.value;
+      gainNode.gain.setValueAtTime(audioPlayer.volume, audioContext.currentTime);
+    });
+
+    // Linha do tempo
     const maxFotos = 7;
     const fotos = Array.from({ length: maxFotos }, (_, i) => `foto${i + 1}.jpg`);
     const frases = [
-      "O dia em que nossos olhares se cruzaram pela primeira vez. ✨",
-      "Nossa primeira aventura juntos, cheia de risos. 💕",
-      "Aquele momento em que percebi que era você. 🌹",
-      "Juntos, construindo memórias que durarão para sempre. 💖",
-      "Cada abraço, um pedaço do céu na terra. 🌸",
-      "Nossos sonhos entrelaçados sob as estrelas. 🌌",
-      "O começo de uma eternidade ao seu lado. 💞"
+      "Quando nossos olhos se encontraram sob o céu estrelado. ✨",
+      "Nossa primeira dança, iluminada pelas luzes polares. 💙",
+      "O momento em que meu coração escolheu você. 🌌",
+      "Cada passo juntos, uma constelação de amor. 💖",
+      "Teus abraços, meu refúgio nas noites frias. ❄️",
+      "Sonhos compartilhados sob as auroras ciano. 🌃",
+      "O início da nossa eternidade, meu amor. 💞"
     ];
 
     const timelineElement = document.getElementById('timeline');
@@ -274,8 +475,7 @@
     const photoElement = document.getElementById('photo');
     const phraseElement = document.getElementById('phrase');
     const suspenseElement = document.getElementById('suspense');
-    const proposalElement = document.getElementById('proposal'); // Corrigido aqui também
-    const audioPlayer = document.getElementById('audioPlayer');
+    const proposalElement = document.getElementById('proposal');
 
     function gerarTimeline() {
       timelineElement.innerHTML = '';
@@ -300,8 +500,10 @@
       const points = timelineElement.querySelectorAll('.point');
       if (points.length < 2) return;
       for (let i = 0; i < points.length - 1; i++) {
-        const point1 = points[i]; const point2 = points[i+1];
-        const rect1 = point1.getBoundingClientRect(); const rect2 = point2.getBoundingClientRect();
+        const point1 = points[i];
+        const point2 = points[i + 1];
+        const rect1 = point1.getBoundingClientRect();
+        const rect2 = point2.getBoundingClientRect();
         const timelineRect = timelineElement.getBoundingClientRect();
         const x1 = rect1.left + rect1.width / 2 - timelineRect.left;
         const y1 = rect1.top + rect1.height / 2 - timelineRect.top;
@@ -326,29 +528,19 @@
           phraseElement.textContent = point.getAttribute('data-phrase');
           photoContainer.style.display = 'block';
           phraseElement.style.display = 'block';
-          createLoveParticlesOnClick();
+          createAuroraParticles();
 
           if (window.innerWidth <= 768) {
             photoContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
           }
 
-          if (index === 0) {
-            console.log("Primeiro ponto clicado. Verificando audioPlayer...");
-            if (audioPlayer) {
-              console.log("audioPlayer encontrado. Tentando tocar C.mp3");
-              audioPlayer.currentTime = 0;
-              audioPlayer.play()
-                .then(() => {
-                  console.log("Áudio 'C.mp3' começou a tocar.");
-                })
-                .catch(err => {
-                  console.error("Erro ao tentar tocar o áudio 'C.mp3':", err);
-                  // Descomente a linha abaixo para um alerta visível se o console não estiver aberto
-                  // alert("Não foi possível tocar o áudio. Verifique o console (F12) para detalhes e se 'C.mp3' está na pasta correta.");
-                });
-            } else {
-              console.error("Elemento de áudio (audioPlayer) NÃO encontrado no HTML!");
-            }
+          if (index === 0 && !isPlaying) {
+            if (audioContext.state === 'suspended') audioContext.resume();
+            audioPlayer.play().then(() => {
+              fadeIn();
+              playPauseBtn.textContent = '⏸️';
+              isPlaying = true;
+            }).catch(err => console.error('Erro ao tocar áudio:', err));
           }
 
           if (index === points.length - 1) {
@@ -356,7 +548,7 @@
             proposalElement.style.display = 'none';
             setTimeout(() => {
               suspenseElement.style.display = 'none';
-              proposalElement.textContent = "Meu amor, quer ser minha estrela guia para toda a eternidade? 💖";
+              proposalElement.textContent = "Meu amor, quer brilhar comigo sob as auroras para sempre? 💙";
               proposalElement.style.display = 'block';
               if (window.innerWidth <= 768) {
                 proposalElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -376,46 +568,38 @@
       proposalElement.style.display = 'none';
       suspenseElement.style.display = 'none';
       photoContainer.style.display = 'none';
-      if (audioPlayer) {
-        audioPlayer.pause();
-        audioPlayer.currentTime = 0;
-        console.log("Áudio pausado e resetado pelo botão Recomeçar.");
+      if (isPlaying) {
+        fadeOut(() => {
+          audioPlayer.pause();
+          playPauseBtn.textContent = '▶️';
+          isPlaying = false;
+        });
       }
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
-    function createLoveParticlesOnClick() {
+    function createAuroraParticles() {
       const numParticles = window.innerWidth <= 480 ? 8 : 15;
       for (let i = 0; i < numParticles; i++) {
         const particle = document.createElement('div');
-        particle.classList.add('romantic-particle');
-        particle.textContent = Math.random() > 0.5 ? '💖' : '🌸';
+        particle.classList.add('aurora-particle');
+        particle.textContent = Math.random() > 0.5 ? '💙' : '✨';
         particle.style.left = `${Math.random() * 100}vw`;
         particle.style.top = `${Math.random() * 50 + 25}vh`;
         particle.style.fontSize = `${Math.random() * 0.7 + 0.8}rem`;
         const fallDuration = Math.random() * 1.5 + 1;
-        particle.style.animationName = 'fallOnClick';
+        particle.style.animationName = 'fall';
         particle.style.animationDuration = `${fallDuration}s`;
         particle.style.animationTimingFunction = 'ease-in';
         document.body.appendChild(particle);
         setTimeout(() => particle.remove(), fallDuration * 1000);
       }
     }
-    const styleSheet = document.createElement("style");
-    styleSheet.innerText = `
-      @keyframes fallOnClick {
-        to {
-          transform: translateY(100vh) rotate(${Math.random() * 360 - 180}deg);
-          opacity: 0;
-        }
-      }
-    `;
-    document.head.appendChild(styleSheet);
 
-    function createContinuousRomanticParticle() {
+    function createContinuousAuroraParticle() {
       const particle = document.createElement('div');
-      particle.classList.add('romantic-particle');
-      particle.textContent = Math.random() > 0.5 ? '💖' : '🌸';
+      particle.classList.add('aurora-particle');
+      particle.textContent = Math.random() > 0.5 ? '💙' : '✨';
       particle.style.left = `${Math.random() * 98}vw`;
       particle.style.fontSize = `${Math.random() * 0.6 + 1.0}rem`;
       particle.style.animationName = 'fall';
@@ -423,11 +607,13 @@
       document.body.appendChild(particle);
       setTimeout(() => particle.remove(), 8000);
     }
-    setInterval(createContinuousRomanticParticle, window.innerWidth <= 480 ? 1500 : 700);
+    setInterval(createContinuousAuroraParticle, window.innerWidth <= 480 ? 1500 : 700);
 
     let resizeTimeout;
     window.addEventListener('resize', () => {
-      setupStars();
+      auroraCanvas.width = window.innerWidth;
+      auroraCanvas.height = window.innerHeight;
+      waveCanvas.width = window.innerWidth;
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
         gerarTimeline();
