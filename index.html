@@ -122,7 +122,7 @@
       margin-right: auto;
       animation: fadeIn 1s ease;
     }
-    .suspense, .proposal {
+    .suspense, .proposal, .audio-error {
       display: none;
       font-size: 1.7rem;
       color: #ff69b4;
@@ -213,8 +213,8 @@
       .photo-container img {
         max-width: 200px; width: 70vw; height: 70vw; max-height: 200px;
       }
-      .phrase, .suspense, .proposal { font-size: 1.2rem; max-width: 95%; }
-      .suspense, .proposal { font-size: 1.3rem; }
+      .phrase, .suspense, .proposal, .audio-error { font-size: 1.2rem; max-width: 95%; }
+      .suspense, .proposal, .audio-error { font-size: 1.3rem; }
       .audio-btn, #resetBtn { padding: 8px 16px; font-size: 1rem; }
     }
   </style>
@@ -230,7 +230,12 @@
     </defs>
   </svg>
   <h1>💖</h1>
-  <audio id="audioPlayer" src="C.mp3" preload="auto" loop></audio>
+  <audio id="audioPlayer" preload="auto" loop>
+    <source src="C.mp3" type="audio/mpeg">
+    <!-- Fallback: Replace with an actual alternative audio file if available -->
+    <source src="backup_audio.mp3" type="audio/mpeg">
+    Desculpe, seu navegador não suporta o elemento de áudio.
+  </audio>
   <div class="timeline" id="timeline" aria-label="Linha do tempo do nosso amor"></div>
   <div class="photo-container" id="photoContainer" aria-live="polite">
     <img id="photo" src="" alt="Foto do momento" />
@@ -238,6 +243,7 @@
   <div class="phrase" id="phrase"></div>
   <div class="suspense" id="suspense">Um momento, meu amor... 🌸</div>
   <div class="proposal" id="proposal"></div>
+  <div class="audio-error" id="audioError">Não foi possível carregar a música. Verifique o arquivo de áudio. 🌸</div>
   <div class="audio-controls">
     <button id="playBtn" class="audio-btn" aria-label="Tocar música">Tocar 🌸</button>
     <button id="pauseBtn" class="audio-btn" aria-label="Pausar música">Pausar 🌸</button>
@@ -305,8 +311,20 @@
     const audioPlayer = document.getElementById('audioPlayer');
     const playBtn = document.getElementById('playBtn');
     const pauseBtn = document.getElementById('pauseBtn');
+    const audioErrorElement = document.getElementById('audioError');
 
     let audioTriggeredOnce = false;
+
+    // Check if audio can be loaded
+    audioPlayer.addEventListener('error', () => {
+      console.error("Erro ao carregar o áudio 'C.mp3':", audioPlayer.error);
+      audioErrorElement.style.display = 'block';
+    });
+
+    audioPlayer.addEventListener('loadeddata', () => {
+      console.log("Áudio 'C.mp3' carregado com sucesso.");
+      audioErrorElement.style.display = 'none';
+    });
 
     function gerarTimeline() {
       timelineElement.innerHTML = '';
@@ -370,9 +388,11 @@
               .then(() => {
                 console.log("Áudio 'C.mp3' começou a tocar em loop.");
                 audioTriggeredOnce = true;
+                audioErrorElement.style.display = 'none';
               })
               .catch(err => {
                 console.error("Erro ao tentar tocar o áudio 'C.mp3':", err);
+                audioErrorElement.style.display = 'block';
               });
           }
 
@@ -402,9 +422,11 @@
           .then(() => {
             console.log("Áudio 'C.mp3' iniciado pelos controles.");
             audioTriggeredOnce = true;
+            audioErrorElement.style.display = 'none';
           })
           .catch(err => {
             console.error("Erro ao tentar tocar o áudio 'C.mp3':", err);
+            audioErrorElement.style.display = 'block';
           });
       }
     });
@@ -413,6 +435,7 @@
       if (audioPlayer) {
         audioPlayer.pause();
         console.log("Áudio 'C.mp3' pausado pelos controles.");
+        audioErrorElement.style.display = 'none';
       }
     });
 
@@ -422,6 +445,7 @@
       proposalElement.style.display = 'none';
       suspenseElement.style.display = 'none';
       photoContainer.style.display = 'none';
+      audioErrorElement.style.display = 'none';
       if (audioPlayer) {
         audioPlayer.pause();
         audioPlayer.currentTime = 0;
