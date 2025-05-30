@@ -13,8 +13,9 @@
       text-align: center;
       padding: 2rem;
       color: #fff;
-      overflow: hidden;
+      overflow-x: hidden; /* Prevent horizontal scroll */
       position: relative;
+      margin: 0;
     }
     @keyframes romanticGradient {
       0% { background-position: 0% 50%; }
@@ -27,14 +28,15 @@
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: -1;
+      z-index: -2; /* Behind particles */
       opacity: 0.7;
     }
     h1 {
-      font-size: 4rem;
+      font-size: 3.5rem; /* Slightly reduced base size */
       text-shadow: 0 0 10px #ff99cc, 0 0 20px #ff69b4;
       animation: heartPulse 3s ease-in-out infinite;
       margin-bottom: 1.5rem;
+      margin-top: 1rem;
     }
     @keyframes heartPulse {
       0% { transform: scale(1); opacity: 0.8; }
@@ -49,6 +51,7 @@
       flex-wrap: wrap;
       position: relative;
       z-index: 1;
+      padding: 0 10px; /* Add some padding to prevent points touching edges */
     }
     .point {
       background: radial-gradient(circle, #ffccff 20%, #ff69b4 80%);
@@ -63,7 +66,8 @@
       justify-content: center;
       box-shadow: 0 0 12px #ff99cc;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
-      position: relative;
+      position: relative; /* For z-index stacking if needed, and for constellation line origin */
+      z-index: 1; /* Above constellation lines */
     }
     .point:hover {
       transform: scale(1.2);
@@ -77,7 +81,7 @@
     }
     .photo-container {
       display: none;
-      margin: 2rem auto;
+      margin: 1.5rem auto; /* Reduced margin for mobile */
       max-width: 90vw;
       position: relative;
       animation: floatIn 1s ease;
@@ -107,7 +111,7 @@
       color: #ffccff;
       text-shadow: 0 0 8px #ff69b4;
       margin-top: 1rem;
-      max-width: 600px;
+      max-width: 90%; /* Use percentage for better adaptability */
       margin-left: auto;
       margin-right: auto;
       animation: fadeIn 1s ease;
@@ -119,9 +123,11 @@
       text-shadow: 0 0 10px #ff99cc;
       margin-top: 1.5rem;
       animation: fadeIn 1s ease;
+      padding: 0 10px; /* Prevent text from touching screen edges */
     }
     #resetBtn {
       margin-top: 2rem;
+      margin-bottom: 1rem; /* Add some bottom margin */
       padding: 12px 24px;
       background: transparent;
       border: 2px solid #ff99cc;
@@ -140,16 +146,17 @@
     }
     .romantic-particle {
       position: fixed;
-      top: -20px;
+      top: -20px; /* Start off-screen */
       font-size: 1.5rem;
       color: #ff99cc;
       animation: fall linear forwards;
-      z-index: -1;
+      z-index: -1; /* Behind timeline but above stars canvas */
       pointer-events: none;
     }
     @keyframes fall {
       to {
-        transform: translateY(100vh) rotate(180deg);
+        transform: translateY(105vh) rotate(360deg); /* Fall further and rotate more */
+        opacity: 0; /* Fade out at the end */
       }
     }
     @keyframes fadeIn {
@@ -157,26 +164,60 @@
       to { opacity: 1; }
     }
     .constellation-line {
-      position: absolute;
+      position: absolute; /* Position relative to the .timeline container */
       background: linear-gradient(to right, transparent, #ff99cc, transparent);
       height: 2px;
-      z-index: 0;
+      z-index: 0; /* Behind points, above background */
+      transform-origin: 0 0; /* Important for rotation */
+      opacity: 0.7;
     }
-    @media (max-width: 480px) {
+
+    /* Mobile specific adjustments */
+    @media (max-width: 768px) { /* Broader tablet breakpoint */
       h1 {
-        font-size: 2.5rem;
+        font-size: 3rem;
+      }
+      .timeline {
+        gap: 15px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 1rem; /* Reduced padding on small screens */
+      }
+      h1 {
+        font-size: 2.2rem; /* Further reduce h1 size */
+        margin-bottom: 1rem;
+      }
+      .timeline {
+        gap: 10px; /* Reduced gap for points */
+        margin: 1rem auto;
       }
       .point {
         width: 50px;
         height: 50px;
         font-size: 1.5rem;
       }
+      .photo-container {
+        margin: 1rem auto;
+      }
       .photo-container img {
-        max-width: 200px;
-        height: 200px;
+        max-width: 200px; /* Max width for the image */
+        width: 70vw;     /* Allow it to scale with viewport width */
+        height: 70vw;    /* Keep it square based on viewport width */
+        max-height: 200px; /* But don't exceed 200px height */
       }
       .phrase, .suspense, .proposal {
-        font-size: 1.2rem;
+        font-size: 1.2rem; /* Reduce font size for phrases */
+        max-width: 95%;
+      }
+      .suspense, .proposal {
+        font-size: 1.3rem;
+      }
+      #resetBtn {
+        padding: 10px 20px;
+        font-size: 1.1rem;
       }
     }
   </style>
@@ -187,61 +228,73 @@
   <svg width="0" height="0">
     <defs>
       <clipPath id="heart-clip" clipPathUnits="objectBoundingBox">
-        <path d="M0.5,0.1 C0.7,0 0.9,0.2 1,0.4 C1,0.6 0.9,0.8 0.7,0.9 C0.5,1 0.3,0.9 0.3,0.9 C0.1,0.8 0,0.6 0,0.4 C0.1,0.2 0.3,0 0.5,0.1 Z" />
+        <path d="M0.5 0.97C0.24 0.77 0 0.52 0 0.27 0 0.12 0.12 0 0.27 0 0.39 0 0.5 0.09 0.5 0.09S0.61 0 0.73 0C0.88 0 1 0.12 1 0.27 1 0.52 0.76 0.77 0.5 0.97Z"/>
       </clipPath>
     </defs>
   </svg>
   <h1>💖</h1>
-  <audio id="audioPlayer" src="C.mp3" preload="auto"></audio>
-  <div class="timeline" id="timeline" aria-label="Linha do tempo do nosso amor"></div>
+  <audio id="audioPlayer" src="C.mp3" preload="auto"></audio> <div class="timeline" id="timeline" aria-label="Linha do tempo do nosso amor"></div>
   <div class="photo-container" id="photoContainer" aria-live="polite">
     <img id="photo" src="" alt="Foto do momento" />
   </div>
   <div class="phrase" id="phrase"></div>
   <div class="suspense" id="suspense">Um momento, meu amor... 🌸</div>
-  <div class="proposal" id="proposal"></div>
+  <div class.proposal" id="proposal"></div>
   <button id="resetBtn" aria-label="Reiniciar a jornada do amor">Recomeçar o Sonho 🌷</button>
 
   <script>
     // Estrelas de fundo
     const canvas = document.getElementById('stars');
     const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    
+    let stars = [];
+    const numStars = 100; // Reduced slightly for potential performance on mobile
 
-    const stars = [];
-    for (let i = 0; i < 150; i++) {
-      stars.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        radius: Math.random() * 1.2,
-        alpha: Math.random(),
-        speed: Math.random() * 0.3
-      });
+    function setupStars() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        stars = [];
+        for (let i = 0; i < numStars; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 1.2 + 0.3, // Ensure stars are not too small
+                alpha: Math.random() * 0.5 + 0.3, // Start with some visibility
+                speed: (Math.random() - 0.5) * 0.2 // Allow movement in both directions
+            });
+        }
     }
 
     function animateStars() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      stars.forEach(star => {
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 204, 255, ${star.alpha})`;
-        ctx.fill();
-        star.alpha += star.speed / 100;
-        if (star.alpha > 1 || star.alpha < 0.4) star.speed = -star.speed;
-      });
-      requestAnimationFrame(animateStars);
-    }
-    animateStars();
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        stars.forEach(star => {
+            ctx.beginPath();
+            ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 204, 255, ${star.alpha})`;
+            ctx.fill();
+            
+            star.alpha += star.speed / 20; // Slower alpha change
+            if (star.alpha > 0.8 || star.alpha < 0.2) star.speed = -star.speed;
 
-    window.addEventListener('resize', () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    });
+            // Optional: make stars twinkle by slightly changing position or radius
+            // star.x += (Math.random() - 0.5) * 0.1;
+            // star.y += (Math.random() - 0.5) * 0.1;
+            if (star.x > canvas.width + star.radius) star.x = -star.radius;
+            if (star.x < -star.radius) star.x = canvas.width + star.radius;
+            if (star.y > canvas.height + star.radius) star.y = -star.radius;
+            if (star.y < -star.radius) star.y = canvas.height + star.radius;
+
+        });
+        requestAnimationFrame(animateStars);
+    }
+    
+    setupStars();
+    animateStars();
 
     // Linha do tempo
     const maxFotos = 7;
-    const fotos = Array.from({ length: maxFotos }, (_, i) => `foto${i + 1}.jpg`);
+    // IMPORTANT: Make sure these image files exist in the same directory or provide correct paths.
+    const fotos = Array.from({ length: maxFotos }, (_, i) => `foto${i + 1}.jpg`); 
     const frases = [
       "O dia em que nossos olhares se cruzaram pela primeira vez. ✨",
       "Nossa primeira aventura juntos, cheia de risos. 💕",
@@ -252,9 +305,16 @@
       "O começo de uma eternidade ao seu lado. 💞"
     ];
 
+    const timelineElement = document.getElementById('timeline');
+    const photoContainer = document.getElementById('photoContainer');
+    const photoElement = document.getElementById('photo');
+    const phraseElement = document.getElementById('phrase');
+    const suspenseElement = document.getElementById('suspense');
+    const proposalElement = document.getElementById('proposal');
+    const audioPlayer = document.getElementById('audioPlayer');
+
     function gerarTimeline() {
-      const timeline = document.getElementById('timeline');
-      timeline.innerHTML = '';
+      timelineElement.innerHTML = ''; // Clear previous points and lines
       for (let i = 0; i < maxFotos; i++) {
         const btn = document.createElement('button');
         btn.className = 'point';
@@ -262,110 +322,166 @@
         btn.setAttribute('data-phrase', frases[i]);
         btn.setAttribute('aria-label', `Momento ${i + 1}: ${frases[i]}`);
         btn.innerHTML = '<span aria-hidden="true">💖</span>';
-        timeline.appendChild(btn);
+        timelineElement.appendChild(btn);
       }
-      drawConstellation();
-      ativarTimeline();
-    }
-
-    function drawConstellation() {
-      const points = document.querySelectorAll('.point');
-      points.forEach((point, i) => {
-        if (i < points.length - 1) {
-          const nextPoint = points[i + 1];
-          const line = document.createElement('div');
-          line.className = 'constellation-line';
-          const rect1 = point.getBoundingClientRect();
-          const rect2 = nextPoint.getBoundingClientRect();
-          const x1 = rect1.left + rect1.width / 2;
-          const y1 = rect1.top + rect1.height / 2;
-          const x2 = rect2.left + rect2.width / 2;
-          const y2 = rect2.top + rect2.height / 2;
-          const length = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
-          const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
-          line.style.width = `${length}px`;
-          line.style.transform = `rotate(${angle}deg)`;
-          line.style.left = `${x1}px`;
-          line.style.top = `${y1}px`;
-          document.getElementById('timeline').appendChild(line);
-        }
+      // Defer constellation drawing until after the browser has rendered the points
+      requestAnimationFrame(() => {
+          drawConstellation();
+          ativarTimeline();
       });
     }
 
-    gerarTimeline();
+    function drawConstellation() {
+      // Clear existing lines first to prevent duplicates on resize
+      const existingLines = timelineElement.querySelectorAll('.constellation-line');
+      existingLines.forEach(line => line.remove());
+
+      const points = timelineElement.querySelectorAll('.point');
+      if (points.length < 2) return;
+
+      for (let i = 0; i < points.length - 1; i++) {
+        const point1 = points[i];
+        const point2 = points[i+1];
+        
+        const rect1 = point1.getBoundingClientRect();
+        const rect2 = point2.getBoundingClientRect();
+        const timelineRect = timelineElement.getBoundingClientRect();
+
+        // Calculate coordinates relative to the timeline container
+        const x1 = rect1.left + rect1.width / 2 - timelineRect.left;
+        const y1 = rect1.top + rect1.height / 2 - timelineRect.top;
+        const x2 = rect2.left + rect2.width / 2 - timelineRect.left;
+        const y2 = rect2.top + rect2.height / 2 - timelineRect.top;
+
+        const length = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+        const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+
+        const line = document.createElement('div');
+        line.className = 'constellation-line';
+        line.style.width = `${length}px`;
+        line.style.transform = `translate(${x1}px, ${y1}px) rotate(${angle}deg)`;
+        // line.style.left = `${x1}px`; // Not needed if using translate
+        // line.style.top = `${y1}px`;  // Not needed if using translate
+        timelineElement.appendChild(line);
+      }
+    }
+    
+    gerarTimeline(); // Initial generation
 
     function ativarTimeline() {
-      const points = document.querySelectorAll('.point');
-      const photoContainer = document.getElementById('photoContainer');
-      const photo = document.getElementById('photo');
-      const phrase = document.getElementById('phrase');
-      const suspense = document.getElementById('suspense');
-      const proposal = document.getElementById('proposal');
-      const audio = document.getElementById('audioPlayer');
-
+      const points = timelineElement.querySelectorAll('.point');
       points.forEach((point, index) => {
         point.addEventListener('click', () => {
-          photo.src = point.getAttribute('data-photo');
-          phrase.textContent = point.getAttribute('data-phrase');
+          photoElement.src = point.getAttribute('data-photo');
+          phraseElement.textContent = point.getAttribute('data-phrase');
           photoContainer.style.display = 'block';
-          phrase.style.display = 'block';
-          createLoveParticles();
+          phraseElement.style.display = 'block';
+          createLoveParticlesOnClick(); // Renamed for clarity
+
+          // Scroll into view if needed on mobile
+          if (window.innerWidth <= 768) {
+            photoContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+
 
           if (index === 0) {
-            audio.currentTime = 0;
-            audio.play().catch(err => console.log('Erro ao reproduzir áudio:', err));
+            audioPlayer.currentTime = 0;
+            audioPlayer.play().catch(err => console.warn('Áudio não pôde ser reproduzido automaticamente:', err));
           }
 
           if (index === points.length - 1) {
-            suspense.style.display = 'block';
+            suspenseElement.style.display = 'block';
+            proposalElement.style.display = 'none'; // Ensure proposal is hidden initially
             setTimeout(() => {
-              suspense.style.display = 'none';
-              proposal.textContent = "Meu amor, quer ser minha estrela guia para toda a eternidade? 💖";
-              proposal.style.display = 'block';
-            }, 2000);
+              suspenseElement.style.display = 'none';
+              proposalElement.textContent = "Meu amor, quer ser minha estrela guia para toda a eternidade? 💖";
+              proposalElement.style.display = 'block';
+               if (window.innerWidth <= 768) {
+                    proposalElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 3000); // Increased suspense time slightly
           } else {
-            suspense.style.display = 'none';
-            proposal.style.display = 'none';
+            suspenseElement.style.display = 'none';
+            proposalElement.style.display = 'none';
           }
         });
       });
     }
 
     document.getElementById('resetBtn').addEventListener('click', () => {
-      document.getElementById('photo').src = '';
-      document.getElementById('phrase').style.display = 'none';
-      document.getElementById('proposal').style.display = 'none';
-      document.getElementById('suspense').style.display = 'none';
-      document.getElementById('photoContainer').style.display = 'none';
-      document.getElementById('audioPlayer').pause();
-      document.getElementById('audioPlayer').currentTime = 0;
+      photoElement.src = '';
+      phraseElement.style.display = 'none';
+      proposalElement.style.display = 'none';
+      suspenseElement.style.display = 'none';
+      photoContainer.style.display = 'none';
+      if (audioPlayer) {
+        audioPlayer.pause();
+        audioPlayer.currentTime = 0;
+      }
+       // Scroll to top
+       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
-    function createLoveParticles() {
-      for (let i = 0; i < 15; i++) {
+    function createLoveParticlesOnClick() { // Creates a burst of particles on click
+      const numParticles = window.innerWidth <= 480 ? 8 : 15; // Fewer particles on small screens
+      for (let i = 0; i < numParticles; i++) {
         const particle = document.createElement('div');
         particle.classList.add('romantic-particle');
         particle.textContent = Math.random() > 0.5 ? '💖' : '🌸';
         particle.style.left = `${Math.random() * 100}vw`;
-        particle.style.top = `${Math.random() * 100}vh`;
-        particle.style.fontSize = `${Math.random() * 0.8 + 1}rem`;
-        particle.style.animationDuration = '1s';
+        // Start particles from the middle of the screen for better effect on click
+        particle.style.top = `${Math.random() * 50 + 25}vh`; 
+        particle.style.fontSize = `${Math.random() * 0.7 + 0.8}rem`; // Slightly smaller particles
+        
+        const fallDuration = Math.random() * 1.5 + 1; // 1s to 2.5s
+        particle.style.animationName = 'fallOnClick'; // Use a different animation if needed or adjust 'fall'
+        particle.style.animationDuration = `${fallDuration}s`;
+        particle.style.animationTimingFunction = 'ease-in'; // Particles start falling slower
+
         document.body.appendChild(particle);
-        setTimeout(() => particle.remove(), 1000);
+        setTimeout(() => particle.remove(), fallDuration * 1000);
       }
     }
+    // Keyframes for fallOnClick if you want it different, otherwise it uses 'fall'
+    // If 'fall' is sufficient, you don't need to redefine. This is for customizing the on-click burst.
+    const styleSheet = document.createElement("style");
+    styleSheet.innerText = `
+      @keyframes fallOnClick {
+        to {
+          transform: translateY(100vh) rotate(${Math.random() * 360 - 180}deg);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(styleSheet);
 
-    function createRomanticParticle() {
+
+    function createContinuousRomanticParticle() { // Creates continuous falling particles
       const particle = document.createElement('div');
       particle.classList.add('romantic-particle');
       particle.textContent = Math.random() > 0.5 ? '💖' : '🌸';
       particle.style.left = `${Math.random() * 98}vw`;
-      particle.style.fontSize = `${Math.random() * 0.8 + 1.2}rem`;
-      particle.style.animationDuration = `${Math.random() * 3 + 4}s`;
+      particle.style.fontSize = `${Math.random() * 0.6 + 1.0}rem`; // Slightly smaller base
+      particle.style.animationName = 'fall'; // General falling animation
+      particle.style.animationDuration = `${Math.random() * 3 + 5}s`; // 5s to 8s duration
       document.body.appendChild(particle);
-      setTimeout(() => particle.remove(), 5000);
+      setTimeout(() => particle.remove(), 8000); // Remove after max duration
     }
-    setInterval(createRomanticParticle, 500);
+    setInterval(createContinuousRomanticParticle, window.innerWidth <= 480 ? 1500 : 700); // Slower on mobile
+
+    // Debounced resize listener
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+      // Always update canvas immediately for stars
+      setupStars(); // Reinitialize stars for new dimensions
+
+      // Debounce timeline regeneration
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        gerarTimeline(); // This will clear and redraw points and then lines
+      }, 250); // 250ms delay
+    });
+
   </script>
 </body>
 </html>
