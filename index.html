@@ -5,6 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Linha do Tempo do Nosso Amor</title>
   <style>
+    @font-face {
+      font-family: 'Dancing Script';
+      src: url('./fonts/DancingScript-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Dancing Script';
+      src: url('./fonts/DancingScript-Bold.woff2') format('woff2');
+      font-weight: 700;
+      font-style: normal;
+    }
     html {
       height: 100%;
     }
@@ -264,6 +276,15 @@
       transform-origin: 0 0;
       opacity: 0.7;
     }
+    .error-message {
+      display: none;
+      font-size: 1rem;
+      color: #ff9999;
+      margin-top: 1rem;
+      max-width: 90%;
+      margin-left: auto;
+      margin-right: auto;
+    }
     @media (max-width: 768px) {
       h1 { font-size: 3rem; }
       .timeline { gap: 15px; }
@@ -283,7 +304,6 @@
       #volumeSlider { width: 80px; }
     }
   </style>
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="aurora-veil"></div>
@@ -299,9 +319,9 @@
   <h1>💖</h1>
   <audio id="audioPlayer" preload="auto" loop>
     <source src="./audio/C.mp3" type="audio/mpeg">
-    <source src="https://cdn.pixabay.com/audio/2023/01/15/audio_9c2e9b7c8f.mp3" type="audio/mpeg">
-    Desculpe, seu navegador não suporta o elemento de áudio.
+    Desculpe, seu navegador não suporta o elemento de áudio ou o arquivo C.mp3 não foi encontrado.
   </audio>
+  <div class="error-message" id="audioError">Não foi possível carregar o áudio. Verifique se o arquivo C.mp3 está na pasta audio/.</div>
   <div class="timeline" id="timeline" aria-label="Linha do tempo do nosso amor"></div>
   <div class="photo-container" id="photoContainer" aria-live="polite">
     <img id="photo" src="" alt="Foto do momento" />
@@ -382,17 +402,27 @@
     waveCanvas.width = window.innerWidth;
     waveCanvas.height = 100;
 
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    const audioPlayer = document.getElementById('audioPlayer');
-    const source = audioContext.createMediaElementSource(audioPlayer);
-    const analyser = audioContext.createAnalyser();
-    analyser.fftSize = 256;
-    source.connect(analyser);
-    analyser.connect(audioContext.destination);
-    const bufferLength = analyser.frequencyBinCount;
-    const dataArray = new Uint8Array(bufferLength);
+    let audioContext, analyser, source, gainNode;
+    try {
+      audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const audioPlayer = document.getElementById('audioPlayer');
+      source = audioContext.createMediaElementSource(audioPlayer);
+      analyser = audioContext.createAnalyser();
+      analyser.fftSize = 256;
+      gainNode = audioContext.createGain();
+      source.connect(gainNode);
+      gainNode.connect(analyser);
+      analyser.connect(audioContext.destination);
+    } catch (err) {
+      console.error('Erro ao inicializar Web Audio API:', err);
+      document.getElementById('audioError').style.display = 'block';
+    }
+
+    const bufferLength = analyser ? analyser.frequencyBinCount : 0;
+    const dataArray = analyser ? new Uint8Array(bufferLength) : [];
 
     function animateAudioWave() {
+      if (!analyser) return;
       waveCtx.clearRect(0, 0, waveCanvas.width, waveCanvas.height);
       analyser.getByteFrequencyData(dataArray);
       const barWidth = waveCanvas.width / bufferLength;
@@ -405,7 +435,7 @@
       }
       requestAnimationFrame(animateAudioWave);
     }
-    animateAudioWave();
+    if (analyser) animateAudioWave();
 
     window.addEventListener('resize', () => {
       auroraCanvas.width = window.innerWidth;
@@ -415,28 +445,34 @@
     });
 
     // Controles de áudio
+    const audioPlayer = document.getElementById('audioPlayer');
     const playPauseBtn = document.getElementById('playPauseBtn');
     const volumeSlider = document.getElementById('volumeSlider');
+    const audioError = document.getElementById('audioError');
     let isPlaying = false;
 
     audioPlayer.volume = 0.5;
-    const gainNode = audioContext.createGain();
-    source.connect(gainNode);
-    gainNode.connect(analyser);
+    if (gainNode) gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);
 
     function fadeIn() {
-      gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-      gainNode.gain.linearRampToValueAtTime(audioPlayer.volume, audioContext.currentTime + 1);
+      if (gainNode) {
+        gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+        gainNode.gain.linearRampToValueAtTime(audioPlayer.volume, audioContext.currentTime + 1);
+      }
     }
 
     function fadeOut(callback) {
-      gainNode.gain.setValueAtTime(audioPlayer.volume, audioContext.currentTime);
-      gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 1);
-      setTimeout(callback, 1000);
+      if (gainNode) {
+        gainNode.gain.setValueAtTime(audioPlayer.volume, audioContext.currentTime);
+        gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 1);
+        setTimeout(callback, 1000);
+      } else {
+        callback();
+      }
     }
 
     playPauseBtn.addEventListener('click', () => {
-      if (audioContext.state === 'suspended') audioContext.resume();
+      if (audioContext && audioContext.state === 'suspended') audioContext.resume();
       if (isPlaying) {
         fadeOut(() => {
           audioPlayer.pause();
@@ -448,18 +484,22 @@
           fadeIn();
           playPauseBtn.textContent = '⏸️';
           isPlaying = true;
-        }).catch(err => console.error('Erro ao tocar áudio:', err));
+          audioError.style.display = 'none';
+        }).catch(err => {
+          console.error('Erro ao tocar áudio:', err);
+          audioError.style.display = 'block';
+        });
       }
     });
 
     volumeSlider.addEventListener('input', () => {
       audioPlayer.volume = volumeSlider.value;
-      gainNode.gain.setValueAtTime(audioPlayer.volume, audioContext.currentTime);
+      if (gainNode) gainNode.gain.setValueAtTime(audioPlayer.volume, audioContext.currentTime);
     });
 
     // Linha do tempo
     const maxFotos = 7;
-    const fotos = Array.from({ length: maxFotos }, (_, i) => `foto${i + 1}.jpg`);
+    const fotos = Array.from({ length: maxFotos }, (_, i) => `./imagens/foto${i + 1}.jpg`);
     const frases = [
       "Quando nossos olhos se encontraram sob o céu estrelado. ✨",
       "Nossa primeira dança, iluminada pelas luzes polares. 💙",
@@ -535,12 +575,16 @@
           }
 
           if (index === 0 && !isPlaying) {
-            if (audioContext.state === 'suspended') audioContext.resume();
+            if (audioContext && audioContext.state === 'suspended') audioContext.resume();
             audioPlayer.play().then(() => {
               fadeIn();
               playPauseBtn.textContent = '⏸️';
               isPlaying = true;
-            }).catch(err => console.error('Erro ao tocar áudio:', err));
+              audioError.style.display = 'none';
+            }).catch(err => {
+              console.error('Erro ao tocar áudio:', err);
+              audioError.style.display = 'block';
+            });
           }
 
           if (index === points.length - 1) {
