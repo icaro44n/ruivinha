@@ -7,13 +7,13 @@
   <style>
     @font-face {
       font-family: 'Dancing Script';
-      src: url('./fonts/DancingScript-Regular.woff2') format('woff2');
+      src: url('https://fonts.gstatic.com/s/dancingscript/v24/If2cXTr6YS-zF4S-kcSWSVi_sxjsohD9F50Ruu7BMSo3Sup5.woff2') format('woff2');
       font-weight: 400;
       font-style: normal;
     }
     @font-face {
       font-family: 'Dancing Script';
-      src: url('./fonts/DancingScript-Bold.woff2') format('woff2');
+      src: url('https://fonts.gstatic.com/s/dancingscript/v24/If2cXTr6YS-zF4S-kcSWSVi_sxjsohD9F50Ruu7B1C03Sup5.woff2') format('woff2');
       font-weight: 700;
       font-style: normal;
     }
@@ -25,7 +25,7 @@
       background-size: 300%;
       background-attachment: fixed;
       animation: auroraGradient 12s ease infinite;
-      font-family: 'Dancing Script', cursive;
+      font-family: 'Dancing Script', cursive, 'Georgia', serif;
       text-align: center;
       padding: 2rem;
       color: #fff;
@@ -180,7 +180,7 @@
       border: 2px solid #00ffff;
       border-radius: 20px;
       color: #fff;
-      font-family: 'Dancing Script', cursive;
+      font-family: 'Dancing Script', cursive, 'Georgia', serif;
       font-size: 1.3rem;
       cursor: pointer;
       transition: all 0.3s ease;
@@ -318,7 +318,7 @@
   </svg>
   <h1>💖</h1>
   <audio id="audioPlayer" preload="auto" loop>
-    <source src="C.mp3" type="audio/mp3">
+    <source src="./C.mp3" type="audio/mpeg">
     Desculpe, seu navegador não suporta o elemento de áudio ou o arquivo C.mp3 não foi encontrado.
   </audio>
   <div class="error-message" id="audioError">Não foi possível carregar o áudio. Verifique se o arquivo C.mp3 está na pasta raiz.</div>
@@ -492,9 +492,10 @@
 
     // Linha do tempo
     const maxFotos = 7;
-    const fotos = Array.from({ length: maxFotos }, (_, i) => `foto${i + 1}.jpg`);
+    const fotos = Array.from({ length: maxFotos }, (_, i) => `./foto${i + 1}.jpg`);
     const frases = [
       "O dia em que nossos olhares se cruzaram pela primeira vez.",
+      "O dia em que te deixei tímida kkkk",
       "Aquele momento em que percebi que não era coisa da minha cabeça...",
       "Minha melhor amiga vei kkkkkkkkkkkkkk. 💖",
       "Esse dia nem vou falar kkkkkk 🌸",
@@ -597,32 +598,68 @@
             suspenseElement.style.display = 'none';
             proposalElement.style.display = 'none';
           }
+        });
+      });
+    }
 
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      photoElement.src = '';
+      phraseElement.style.display = 'none';
+      proposalElement.style.display = 'none';
+      suspenseElement.style.display = 'none';
+      photoContainer.style.display = 'none';
+      if (audioPlayer && isPlaying) {
+        fadeOut(() => {
+          audioPlayer.pause();
+          playPauseBtn.textContent = '▶️';
+          isPlaying = false;
+          audioTriggeredOnce = false;
+        });
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
 
+    function createAuroraParticles() {
+      const numParticles = window.innerWidth <= 480 ? 8 : 15;
+      for (let i = 0; i < numParticles; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('aurora-particle');
+        particle.textContent = Math.random() > 0.5 ? '💙' : '✨';
+        particle.style.left = `${Math.random() * 100}vw`;
+        particle.style.top = `${Math.random() * 50 + 25}vh`;
+        particle.style.fontSize = `${Math.random() * 0.7 + 0.8}rem`;
+        const fallDuration = Math.random() * 1.5 + 1;
+        particle.style.animationName = 'fall';
+        particle.style.animationDuration = `${fallDuration}s`;
+        particle.style.animationTimingFunction = 'ease-in';
+        document.body.appendChild(particle);
+        setTimeout(() => particle.remove(), fallDuration * 1000);
+      }
+    }
 
+    function createContinuousAuroraParticle() {
+      const particle = document.createElement('div');
+      particle.classList.add('aurora-particle');
+      particle.textContent = Math.random() > 0.5 ? '💙' : '✨';
+      particle.style.left = `${Math.random() * 98}vw`;
+      particle.style.fontSize = `${Math.random() * 0.6 + 1.0}rem`;
+      particle.style.animationName = 'fall';
+      particle.style.animationDuration = `${Math.random() * 3 + 5}s`;
+      document.body.appendChild(particle);
+      setTimeout(() => particle.remove(), 8000);
+    }
+    setInterval(createContinuousAuroraParticle, window.innerWidth <= 480 ? 1500 : 700);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+      auroraCanvas.width = window.innerWidth;
+      auroraCanvas.height = window.innerHeight;
+      waveCanvas.width = window.innerWidth;
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        gerarTimeline();
+      }, 250);
+    });
+  </script>
+</body>
+</html>
