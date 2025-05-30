@@ -5,6 +5,88 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Linha do Tempo do Amor</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background: linear-gradient(to right, #ffe4e1, #fff0f5);
+      font-family: 'Segoe UI', sans-serif;
+      text-align: center;
+      padding: 2rem;
+    }
+    h1 {
+      color: #d63384;
+    }
+    .timeline {
+      margin: 2rem auto;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .point {
+      background-color: #fff;
+      border: 2px solid #ff69b4;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+      font-size: 1.5rem;
+      transition: transform 0.2s ease;
+    }
+    .point:hover {
+      transform: scale(1.2);
+      background-color: #ff69b4;
+      color: white;
+    }
+    .photo-container {
+      display: none;
+      margin: 1rem auto;
+      max-width: 90vw;
+    }
+    .photo-container img {
+      max-width: 100%;
+      border-radius: 1rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .phrase {
+      display: none;
+      font-size: 1.2rem;
+      color: #800080;
+      margin-top: 1rem;
+    }
+    .suspense, .proposal {
+      display: none;
+      font-size: 1.4rem;
+      margin-top: 1rem;
+      color: #dc143c;
+    }
+    #resetBtn {
+      margin-top: 2rem;
+      padding: 10px 20px;
+      background-color: #d63384;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    #resetBtn:hover {
+      background-color: #b02a69;
+    }
+    .heart {
+      position: fixed;
+      top: -20px;
+      animation: fall linear forwards;
+    }
+    @keyframes fall {
+      to {
+        transform: translateY(100vh);
+      }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
 </head>
 <body>
   <h1>Nosso Relacionamento 💖</h1>
@@ -20,29 +102,29 @@
 
   <script>
     const frases = [
-      "Tudo começou com um olhar tímido e um sorriso que mudou meu dia.",
-      "Nos primeiros passos, percebi que sua presença me fazia completo.",
-      "Cada encontro trouxe mais certezas de que era ao seu lado que eu queria estar.",
-      "Vivemos risadas, conversas e silêncios cheios de significado.",
-      "Com você, os dias comuns se tornaram especiais e cheios de cor.",
-      "Nossos sonhos começaram a se entrelaçar como se fossem um só.",
-      "Hoje sei que amar é caminhar contigo, dia após dia, de coração aberto.",
-      "E agora, cada capítulo é mais bonito porque é escrito com você. 💞"
+      "Nosso primeiro encontro foi mágico, lembro do frio na barriga até hoje.",
+      "Aquela caminhada no parque... onde nossos passos começaram a se alinhar.",
+      "Entre risos e confissões, te conheci de verdade — e me apaixonei.",
+      "Cada abraço seu é um refúgio, onde o mundo lá fora não importa.",
+      "Mesmo nas diferenças, encontramos um caminho de mãos dadas.",
+      "Seus olhos dizem tudo — e eu ouço cada palavra.",
+      "Somos poesia em forma de vida, verso por verso juntos.",
+      "E agora, não consigo imaginar o amanhã sem você ao meu lado. 💞"
     ];
 
-    const maxFotos = 8;
+    const maxFotos = 7;
     const fotos = Array.from({ length: maxFotos }, (_, i) => `foto${i + 1}.jpg`);
 
     function gerarTimeline() {
       const timeline = document.getElementById('timeline');
       timeline.innerHTML = '';
-      for (let i = 1; i <= maxFotos; i++) {
-        const frase = frases[i - 1] || `Mais um capítulo da nossa história juntos.`;
+      for (let i = 0; i < maxFotos; i++) {
+        const frase = frases[i] || `Mais um capítulo da nossa história juntos.`;
         const btn = document.createElement('button');
         btn.className = 'point';
-        btn.setAttribute('data-photo', `foto${i}.jpg`);
+        btn.setAttribute('data-photo', fotos[i]);
         btn.setAttribute('data-phrase', frase);
-        btn.setAttribute('aria-label', `Momento ${i}`);
+        btn.setAttribute('aria-label', `Momento ${i + 1}`);
         btn.innerHTML = '<span aria-hidden="true">❤️</span>';
         timeline.appendChild(btn);
       }
