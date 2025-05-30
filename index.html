@@ -4,137 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Linha do Tempo do Amor</title>
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", "Arial", sans-serif;
-      background: linear-gradient(to bottom right, #1a1a1a, #2c3e50);
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-      min-height: 100vh;
-      text-align: center;
-      overflow: auto;
-    }
-    h1 {
-      font-size: 2.2rem;
-      margin-bottom: 30px;
-      text-shadow: 0 0 10px rgba(255,255,255,0.3);
-    }
-    .timeline {
-      position: relative;
-      width: 100%;
-      max-width: 700px;
-      background: rgba(255,255,255,0.08);
-      border-radius: 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 20px;
-      margin-bottom: 30px;
-      min-height: 80px;
-    }
-    .timeline::before {
-      content: "";
-      position: absolute;
-      top: 50%;
-      left: 8%;
-      right: 8%;
-      height: 3px;
-      background: #ccc;
-      transform: translateY(-50%);
-      z-index: 0;
-    }
-    .point {
-      width: 36px;
-      height: 36px;
-      background: #e74c3c;
-      border-radius: 50%;
-      position: relative;
-      z-index: 1;
-      transition: transform 0.3s, background 0.3s;
-      flex-shrink: 0;
-      cursor: pointer;
-      border: 3px solid #fff;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      outline: none;
-      color: #fff;
-      user-select: none;
-    }
-    .point:focus, .point:hover {
-      transform: scale(1.2);
-      background: #f39c12;
-      border-color: #f39c12;
-    }
-    .photo-container {
-      display: none;
-      width: 90%;
-      max-width: 350px;
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.4);
-      margin-bottom: 20px;
-      background: #222;
-    }
-    .photo-container img {
-      width: 100%;
-      display: block;
-    }
-    .phrase {
-      display: none;
-      font-size: 1.2rem;
-      margin-top: 15px;
-      color: #ffe6e6;
-      min-height: 2.2em;
-      font-style: italic;
-      letter-spacing: 0.5px;
-    }
-    .suspense, .proposal {
-      display: none;
-      margin-top: 25px;
-    }
-    .suspense {
-      background: rgba(0,0,0,0.7);
-      padding: 20px;
-      border-radius: 10px;
-      font-size: 1.2rem;
-    }
-    .proposal {
-      font-size: 1.5rem;
-      color: #f39c12;
-      font-weight: bold;
-      animation: glow 2s infinite alternate;
-    }
-    @keyframes glow {
-      from { text-shadow: 0 0 10px #f39c12; }
-      to { text-shadow: 0 0 25px #f39c12; }
-    }
-    .heart {
-      position: absolute;
-      top: -50px;
-      font-size: 1.5rem;
-      animation: fall 4s linear forwards;
-      opacity: 0.8;
-      pointer-events: none;
-    }
-    @keyframes fall {
-      to {
-        transform: translateY(100vh);
-        opacity: 0;
-      }
-    }
-    @media (max-width: 700px) {
-      .timeline { max-width: 98%; }
-      .point { width: 28px; height: 28px; font-size: 1.1rem; }
-      h1 { font-size: 1.5rem; }
-      .photo-container { max-width: 98%; }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <h1>Nosso Relacionamento 💖</h1>
@@ -147,22 +17,17 @@
   <div class="suspense" id="suspense">Espere um pouquinho... 💬</div>
   <div class="proposal" id="proposal"></div>
   <script>
-    // Poema em partes, um para cada foto
     const frases = [
-      "No silêncio do primeiro olhar, nasceu a promessa de um novo começo.",
-      "Entre sorrisos tímidos, descobrimos a beleza de sermos nós mesmos.",
-      "Cada instante ao seu lado transformou o tempo em eternidade suave.",
-      "Nos dias de tempestade, encontrei em você o abrigo mais sereno.",
-      "E assim seguimos, escrevendo juntos um poema que só faz sentido a dois.",
-      "E cada nova foto é mais um verso dessa história sem fim.",
-      "O tempo passa, mas o sentimento só cresce, renovando cada capítulo.",
-      "Nosso amor é feito de detalhes, memórias e sonhos compartilhados.",
-      "Seguimos juntos, lado a lado, celebrando cada momento vivido.",
-      "E o futuro é apenas mais uma página em branco para nós dois."
+      "Tudo começou com um olhar tímido e um sorriso que mudou meu dia.",
+      "Nos primeiros passos, percebi que sua presença me fazia completo.",
+      "Cada encontro trouxe mais certezas de que era ao seu lado que eu queria estar.",
+      "Vivemos risadas, conversas e silêncios cheios de significado.",
+      "Com você, os dias comuns se tornaram especiais e cheios de cor.",
+      "Nossos sonhos começaram a se entrelaçar como se fossem um só.",
+      "Hoje sei que amar é caminhar contigo, dia após dia, de coração aberto."
     ];
 
-    // Descobre quantas fotos existem (até 20, pode aumentar se quiser)
-    const maxFotos = 20;
+    const maxFotos = 7;
     const fotos = [];
     for (let i = 1; i <= maxFotos; i++) {
       const img = new Image();
@@ -170,7 +35,7 @@
       img.onload = () => {
         if (!fotos.includes(img.src)) {
           fotos.push(img.src);
-          if (fotos.length === 1) gerarTimeline(); // Gera só uma vez, quando a primeira carrega
+          if (fotos.length === 1) gerarTimeline();
         }
       };
       img.onerror = () => {};
@@ -215,13 +80,13 @@
             audio.play();
           }
 
-          // Suspense no último ponto, sem pedido de namoro
           if (index === points.length - 1) {
             suspense.style.display = 'block';
             suspense.style.animation = 'fadeIn 0.7s';
             setTimeout(() => {
               suspense.style.display = 'none';
-              proposal.style.display = 'none';
+              proposal.textContent = "Vamos continuar escrevendo juntos essa história de amor? 💖";
+              proposal.style.display = 'block';
             }, 1800);
           } else {
             suspense.style.display = 'none';
@@ -231,7 +96,6 @@
       });
     }
 
-    // Chuva de corações contínua
     function createHeartRain() {
       const heart = document.createElement('div');
       heart.classList.add('heart');
@@ -246,4 +110,3 @@
   </script>
 </body>
 </html>
-
