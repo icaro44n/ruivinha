@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Linha do Tempo do Amor</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>Nosso Relacionamento 💖</h1>
+  <audio id="audioPlayer" src="C.mp3" preload="auto"></audio>
+  <div class="timeline" id="timeline" aria-label="Linha do tempo do relacionamento"></div>
+  <div class="photo-container" id="photoContainer" aria-live="polite">
+    <img id="photo" src="" alt="Foto do momento" />
+  </div>
+  <div class="phrase" id="phrase"></div>
+  <div class="suspense" id="suspense">Espere um pouquinho... 💬</div>
+  <div class="proposal" id="proposal"></div>
+  <script>
+    const frases = [
+      "Tudo começou com um olhar tímido e um sorriso que mudou meu dia.",
+      "Nos primeiros passos, percebi que sua presença me fazia completo.",
+      "Cada encontro trouxe mais certezas de que era ao seu lado que eu queria estar.",
+      "Vivemos risadas, conversas e silêncios cheios de significado.",
+      "Com você, os dias comuns se tornaram especiais e cheios de cor.",
+      "Nossos sonhos começaram a se entrelaçar como se fossem um só.",
+      "Hoje sei que amar é caminhar contigo, dia após dia, de coração aberto."
+    ];
+
+    const maxFotos = 7;
+    const fotos = [];
+    for (let i = 1; i <= maxFotos; i++) {
+      const img = new Image();
+      img.src = `foto${i}.jpg`;
+      img.onload = () => {
+        if (!fotos.includes(img.src)) {
+          fotos.push(img.src);
+          if (fotos.length === 1) gerarTimeline();
+        }
+      };
+      img.onerror = () => {};
+    }
+
+    function gerarTimeline() {
+      const timeline = document.getElementById('timeline');
+      timeline.innerHTML = '';
+      for (let i = 1; i <= fotos.length; i++) {
+        const frase = frases[i - 1] || `Mais um capítulo da nossa história juntos.`;
+        const btn = document.createElement('button');
+        btn.className = 'point';
+        btn.setAttribute('data-photo', `foto${i}.jpg`);
+        btn.setAttribute('data-phrase', frase);
+        btn.setAttribute('aria-label', `Momento ${i}`);
+        btn.innerHTML = '<span aria-hidden="true">❤️</span>';
+        timeline.appendChild(btn);
+      }
+      ativarTimeline();
+    }
+
+    function ativarTimeline() {
+      const points = document.querySelectorAll('.point');
+      const photoContainer = document.getElementById('photoContainer');
+      const photo = document.getElementById('photo');
+      const phrase = document.getElementById('phrase');
+      const suspense = document.getElementById('suspense');
+      const proposal = document.getElementById('proposal');
+      const audio = document.getElementById('audioPlayer');
+
+      points.forEach((point, index) => {
+        point.addEventListener('click', () => {
+          photo.src = point.getAttribute('data-photo');
+          photoContainer.style.display = 'block';
+          photoContainer.style.animation = 'fadeIn 0.7s';
+          phrase.textContent = point.getAttribute('data-phrase');
+          phrase.style.display = 'block';
+          phrase.style.animation = 'fadeIn 0.7s';
+
+          if (index === 0) {
+            audio.currentTime = 0;
+            audio.play();
+          }
+
+          if (index === points.length - 1) {
+            suspense.style.display = 'block';
+            suspense.style.animation = 'fadeIn 0.7s';
+            setTimeout(() => {
+              suspense.style.display = 'none';
+              proposal.textContent = "Vamos continuar escrevendo juntos essa história de amor? 💖";
+              proposal.style.display = 'block';
+            }, 1800);
+          } else {
+            suspense.style.display = 'none';
+            proposal.style.display = 'none';
+          }
+        });
+      });
+    }
+
+    function createHeartRain() {
+      const heart = document.createElement('div');
+      heart.classList.add('heart');
+      heart.textContent = Math.random() > 0.2 ? '❤️' : '💕';
+      heart.style.left = `${Math.random() * 98}vw`;
+      heart.style.fontSize = `${Math.random() * 0.8 + 1.2}rem`;
+      heart.style.animationDuration = `${Math.random() * 2 + 4}s`;
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 5000);
+    }
+    setInterval(createHeartRain, 400);
+  </script>
+</body>
+</html>
