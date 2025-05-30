@@ -1,5 +1,4 @@
- 
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
@@ -209,7 +208,7 @@
     </defs>
   </svg>
   <h1>💖</h1>
-  <audio id="audioPlayer" src="C.mp3" preload="auto" loop></audio>
+  <audio id="audioPlayer" src="C.mp3" preload="auto"></audio>
   <div class="timeline" id="timeline" aria-label="Linha do tempo do nosso amor"></div>
   <div class="photo-container" id="photoContainer" aria-live="polite">
     <img id="photo" src="" alt="Foto do momento" />
@@ -279,7 +278,7 @@
     const proposalElement = document.getElementById('proposal');
     const audioPlayer = document.getElementById('audioPlayer');
 
-    let audioPlayedOnce = false; // Flag para controlar se o áudio já tocou
+    let audioTriggeredOnce = false; // Nova flag para garantir que o áudio só inicie uma vez
 
     function gerarTimeline() {
       timelineElement.innerHTML = '';
@@ -336,23 +335,24 @@
             photoContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
           }
 
-          // Iniciar áudio apenas uma vez, na primeira interação
-          if (!audioPlayedOnce && audioPlayer) {
-            console.log("Primeiro clique detectado. Tentando tocar o áudio.");
-            audioPlayer.currentTime = 0;
+          // Iniciar áudio apenas no PRIMEIRO PONTO e apenas UMA VEZ
+          if (index === 0 && !audioTriggeredOnce && audioPlayer) {
+            console.log("Primeiro ponto clicado. Tentando tocar o áudio.");
+            audioPlayer.currentTime = 0; // Reinicia o áudio
+            audioPlayer.loop = true; // Define para loop
             audioPlayer.play()
               .then(() => {
-                console.log("Áudio 'C.mp3' começou a tocar.");
-                audioPlayedOnce = true; // Define a flag para true após o sucesso
+                console.log("Áudio 'C.mp3' começou a tocar em loop.");
+                audioTriggeredOnce = true; // Define a flag para true após o sucesso
               })
               .catch(err => {
                 console.error("Erro ao tentar tocar o áudio 'C.mp3':", err);
                 // Pode exibir uma mensagem ao usuário se o áudio não puder ser reproduzido
-                // alert("Não foi possível tocar a música. Talvez seu navegador esteja bloqueando o autoplay.");
+                // alert("Não foi possível tocar a música. Verifique o console para mais detalhes.");
               });
           }
 
-
+          // Lógica para o último ponto
           if (index === points.length - 1) {
             suspenseElement.style.display = 'block';
             proposalElement.style.display = 'none';
@@ -381,7 +381,7 @@
       if (audioPlayer) {
         audioPlayer.pause();
         audioPlayer.currentTime = 0;
-        audioPlayedOnce = false; // Permite que o áudio toque novamente após o reset
+        audioTriggeredOnce = false; // Reseta a flag para permitir que o áudio toque novamente no próximo "primeiro clique"
         console.log("Áudio pausado e resetado pelo botão Recomeçar.");
       }
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -439,4 +439,3 @@
   </script>
 </body>
 </html>
-
