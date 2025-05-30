@@ -6,8 +6,8 @@
   <title>Linha do Tempo do Amor</title>
   <style>
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", "Arial", sans-serif;
-      background: linear-gradient(to bottom right, #1a1a1a, #2c3e50);
+      font-family: 'Segoe UI', 'Arial', sans-serif;
+      background: linear-gradient(135deg, #ffdde1 0%, #ee9ca7 100%);
       color: #fff;
       display: flex;
       flex-direction: column;
@@ -15,120 +15,175 @@
       padding: 20px;
       min-height: 100vh;
       text-align: center;
-      overflow: auto;
+      overflow-x: hidden;
+      position: relative;
     }
     h1 {
-      font-size: 2.2rem;
-      margin-bottom: 30px;
-      text-shadow: 0 0 10px rgba(255,255,255,0.3);
+      font-size: 2.5rem;
+      margin-bottom: 35px;
+      text-shadow: 0 2px 24px #ee9ca7, 0 0 8px #fff;
+      letter-spacing: 1.5px;
+      background: linear-gradient(90deg, #ee9ca7, #ffdde1, #fcb69f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
     .timeline {
       position: relative;
       width: 100%;
-      max-width: 700px;
-      background: rgba(255,255,255,0.08);
-      border-radius: 15px;
+      max-width: 750px;
+      background: rgba(255,255,255,0.18);
+      border-radius: 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 20px;
-      margin-bottom: 30px;
-      min-height: 80px;
+      padding: 0 28px;
+      margin-bottom: 35px;
+      min-height: 100px;
+      box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
+      backdrop-filter: blur(8px);
+      border: 1.5px solid rgba(255,255,255,0.25);
+      overflow: visible;
     }
     .timeline::before {
       content: "";
       position: absolute;
       top: 50%;
-      left: 8%;
-      right: 8%;
-      height: 3px;
-      background: #ccc;
+      left: 10%;
+      right: 10%;
+      height: 4px;
+      background: linear-gradient(90deg, #ee9ca7 0%, #ffdde1 100%);
       transform: translateY(-50%);
       z-index: 0;
+      border-radius: 2px;
+      opacity: 0.7;
     }
     .point {
-      width: 32px;
-      height: 32px;
-      background: #e74c3c;
+      width: 48px;
+      height: 48px;
+      background: rgba(255,255,255,0.35);
       border-radius: 50%;
       position: relative;
       z-index: 1;
-      transition: transform 0.3s, background 0.3s;
+      transition: transform 0.25s, box-shadow 0.25s, background 0.25s;
       flex-shrink: 0;
       cursor: pointer;
-      border: 3px solid #fff;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      border: 2.5px solid #fff;
+      box-shadow: 0 2px 12px 0 rgba(238,156,167,0.25);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.3rem;
+      font-size: 2rem;
       outline: none;
+      color: #ee9ca7;
+      user-select: none;
+      overflow: visible;
+      animation: pulse 2s infinite;
     }
     .point:focus, .point:hover {
-      transform: scale(1.2);
-      background: #f39c12;
-      border-color: #f39c12;
+      transform: scale(1.18) rotate(-8deg);
+      background: #fff0f6;
+      box-shadow: 0 0 32px 0 #ee9ca7;
+      color: #f67280;
+      border-color: #f67280;
+      animation: none;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 #ee9ca744; }
+      70% { box-shadow: 0 0 0 16px #ee9ca700; }
+      100% { box-shadow: 0 0 0 0 #ee9ca700; }
     }
     .photo-container {
       display: none;
-      width: 90%;
-      max-width: 350px;
-      border-radius: 15px;
+      width: 92%;
+      max-width: 370px;
+      border-radius: 18px;
       overflow: hidden;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.4);
-      margin-bottom: 20px;
-      background: #222;
+      box-shadow: 0 8px 32px rgba(238,156,167,0.25);
+      margin-bottom: 22px;
+      background: rgba(255,255,255,0.22);
+      border: 1.5px solid #fff;
+      backdrop-filter: blur(4px);
+      animation: fadeIn 0.7s;
     }
     .photo-container img {
       width: 100%;
       display: block;
+      border-radius: 18px;
+      filter: brightness(0.97) contrast(1.05);
     }
     .phrase {
       display: none;
-      font-size: 1.1rem;
-      margin-top: 15px;
-      color: #f0f0f0;
+      font-size: 1.25rem;
+      margin-top: 18px;
+      color: #fff;
       min-height: 2.2em;
+      font-style: italic;
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 8px #ee9ca7cc;
+      animation: fadeIn 0.7s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px);}
+      to { opacity: 1; transform: translateY(0);}
     }
     .suspense, .proposal {
       display: none;
-      margin-top: 25px;
+      margin-top: 30px;
     }
     .suspense {
-      background: rgba(0,0,0,0.7);
-      padding: 20px;
-      border-radius: 10px;
+      background: rgba(255,255,255,0.22);
+      padding: 22px;
+      border-radius: 12px;
       font-size: 1.2rem;
+      color: #f67280;
+      border: 1.5px solid #fff;
+      box-shadow: 0 2px 12px #ee9ca7aa;
+      animation: fadeIn 0.7s;
     }
     .proposal {
-      font-size: 1.5rem;
-      color: #f39c12;
+      font-size: 2rem;
+      color: #f67280;
       font-weight: bold;
-      animation: glow 2s infinite alternate;
+      animation: glow 1.5s infinite alternate, fadeIn 1s;
+      letter-spacing: 1.5px;
+      text-shadow: 0 0 18px #fff, 0 0 32px #ee9ca7;
+      background: rgba(255,255,255,0.18);
+      border-radius: 14px;
+      padding: 18px 24px;
+      border: 1.5px solid #fff;
+      margin-bottom: 20px;
+      margin-top: 30px;
+      box-shadow: 0 2px 24px #ee9ca744;
     }
     @keyframes glow {
-      from { text-shadow: 0 0 10px #f39c12; }
-      to { text-shadow: 0 0 25px #f39c12; }
+      from { text-shadow: 0 0 18px #fff, 0 0 32px #ee9ca7; }
+      to { text-shadow: 0 0 32px #fff, 0 0 48px #f67280; }
     }
     .heart {
-      position: absolute;
-      top: -50px;
-      font-size: 1.5rem;
-      animation: fall 4s linear forwards;
-      opacity: 0.8;
+      position: fixed;
+      top: -40px;
+      font-size: 1.7rem;
       pointer-events: none;
+      opacity: 0.85;
+      animation: fall 5s linear forwards;
+      z-index: 9999;
+      filter: drop-shadow(0 2px 8px #ee9ca7cc);
+      will-change: transform, opacity;
     }
     @keyframes fall {
       to {
-        transform: translateY(100vh);
+        transform: translateY(110vh) rotate(30deg);
         opacity: 0;
       }
     }
+    /* Responsivo */
     @media (max-width: 700px) {
-      .timeline { max-width: 98%; }
-      .point { width: 26px; height: 26px; font-size: 1rem; }
-      h1 { font-size: 1.5rem; }
-      .photo-container { max-width: 98%; }
+      .timeline { max-width: 99%; }
+      .point { width: 34px; height: 34px; font-size: 1.2rem; }
+      h1 { font-size: 1.3rem; }
+      .photo-container { max-width: 99%; }
+      .proposal { font-size: 1.2rem; padding: 10px 8px; }
     }
   </style>
 </head>
@@ -136,11 +191,11 @@
   <h1>Nosso Relacionamento 💖</h1>
   <audio id="audioPlayer" src="C.mp3" preload="auto"></audio>
   <div class="timeline" aria-label="Linha do tempo do relacionamento">
-    <button class="point" data-photo="foto1.jpg" data-phrase="O começo de tudo: nosso primeiro olhar." aria-label="Ponto 1">1</button>
-    <button class="point" data-photo="foto2.jpg" data-phrase="Descobrindo juntos o significado do amor." aria-label="Ponto 2">2</button>
-    <button class="point" data-photo="foto3.jpg" data-phrase="Nossos momentos especiais, sempre únicos." aria-label="Ponto 3">3</button>
-    <button class="point" data-photo="foto4.jpg" data-phrase="Superando desafios, crescendo lado a lado." aria-label="Ponto 4">4</button>
-    <button class="point" data-photo="foto5.jpg" data-phrase="Prontos para o próximo capítulo juntos?" aria-label="Ponto 5">5</button>
+    <button class="point" data-photo="foto1.jpg" data-phrase="Quando nossos olhares se cruzaram, o tempo parou e o amor nasceu." aria-label="Primeiro momento"><span aria-hidden="true">❤️</span></button>
+    <button class="point" data-photo="foto2.jpg" data-phrase="Cada sorriso seu ilumina meus dias e faz meu coração dançar." aria-label="Segundo momento"><span aria-hidden="true">❤️</span></button>
+    <button class="point" data-photo="foto3.jpg" data-phrase="Juntos, criamos lembranças que aquecem minha alma para sempre." aria-label="Terceiro momento"><span aria-hidden="true">❤️</span></button>
+    <button class="point" data-photo="foto4.jpg" data-phrase="Nos desafios, encontrei em você minha força e meu abrigo." aria-label="Quarto momento"><span aria-hidden="true">❤️</span></button>
+    <button class="point" data-photo="foto5.jpg" data-phrase="Vamos escrever juntos o próximo capítulo da nossa história?" aria-label="Quinto momento"><span aria-hidden="true">❤️</span></button>
   </div>
   <div class="photo-container" id="photoContainer" aria-live="polite">
     <img id="photo" src="" alt="Foto do momento" />
@@ -157,13 +212,29 @@
     const proposal = document.getElementById('proposal');
     const audio = document.getElementById('audioPlayer');
 
+    // Chuva de corações contínua
+    function createHeartRain() {
+      const heart = document.createElement('div');
+      heart.classList.add('heart');
+      heart.textContent = Math.random() > 0.2 ? '❤️' : '💕';
+      heart.style.left = `${Math.random() * 98}vw`;
+      heart.style.fontSize = `${Math.random() * 0.8 + 1.2}rem`;
+      heart.style.animationDuration = `${Math.random() * 2 + 4}s`;
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 5000);
+    }
+    setInterval(createHeartRain, 400);
+
+    // Efeito nos pontos
     points.forEach((point, index) => {
       point.addEventListener('click', () => {
-        // Mostra foto e frase
+        // Mostra foto e frase com animação
         photo.src = point.getAttribute('data-photo');
-        phrase.textContent = point.getAttribute('data-phrase');
         photoContainer.style.display = 'block';
+        photoContainer.style.animation = 'fadeIn 0.7s';
+        phrase.textContent = point.getAttribute('data-phrase');
         phrase.style.display = 'block';
+        phrase.style.animation = 'fadeIn 0.7s';
 
         // Toca música no primeiro ponto
         if (index === 0) {
@@ -174,31 +245,18 @@
         // Proposta no último ponto
         if (index === points.length - 1) {
           suspense.style.display = 'block';
+          suspense.style.animation = 'fadeIn 0.7s';
           setTimeout(() => {
             suspense.style.display = 'none';
             proposal.style.display = 'block';
-            createHeartRain();
-          }, 2000);
+            proposal.style.animation = 'glow 1.5s infinite alternate, fadeIn 1s';
+          }, 1800);
         } else {
           suspense.style.display = 'none';
           proposal.style.display = 'none';
         }
       });
     });
-
-    function createHeartRain() {
-      for (let i = 0; i < 10; i++) {
-        const heart = document.createElement('div');
-        heart.classList.add('heart');
-        heart.textContent = '❤️';
-        heart.style.left = `${Math.random() * 100}vw`;
-        heart.style.animationDuration = `${Math.random() * 2 + 3}s`;
-        document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), 4000);
-      }
-    }
-    // Chuva de corações contínua (opcional, pode remover se quiser só na proposta)
-    // setInterval(createHeartRain, 4000);
   </script>
 </body>
 </html>
