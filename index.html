@@ -335,14 +335,14 @@
           if (index === 0) {
             console.log("Primeiro ponto clicado. Verificando audioPlayer...");
             if (audioPlayer) {
-              console.log("audioPlayer encontrado. Tentando tocar C.mp3");
+              console.log("audioPlayer encontrado. Tentando tocar Bertha Tillman-Oh My Angel (1).mp3");
               audioPlayer.currentTime = 0;
               audioPlayer.play()
                 .then(() => {
                   console.log("Áudio 'C.mp3' começou a tocar.");
                 })
                 .catch(err => {
-                  console.error("Erro ao tentar tocar o áudio 'C.mp3':", err);
+                  console.error("Erro ao tentar tocar o áudio 'Bertha Tillman-Oh My Angel (1).mp3':", err);
                   // Descomente a linha abaixo para um alerta visível se o console não estiver aberto
                   // alert("Não foi possível tocar o áudio. Verifique o console (F12) para detalhes e se 'C.mp3' está na pasta correta.");
                 });
