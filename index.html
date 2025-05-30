@@ -3,107 +3,254 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Linha do Tempo do Amor</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Linha do Tempo do Nosso Amor</title>
   <style>
     body {
-      background: linear-gradient(to right, #ffe4e1, #fff0f5);
-      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(45deg, #2a0a4a, #4a0a6a, #ffccff);
+      background-size: 300%;
+      animation: romanticGradient 12s ease infinite;
+      font-family: 'Dancing Script', cursive;
       text-align: center;
       padding: 2rem;
+      color: #fff;
+      overflow: hidden;
+      position: relative;
+    }
+    @keyframes romanticGradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    canvas#stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.7;
     }
     h1 {
-      color: #d63384;
+      font-size: 4rem;
+      text-shadow: 0 0 10px #ff99cc, 0 0 20px #ff69b4;
+      animation: heartPulse 3s ease-in-out infinite;
+      margin-bottom: 1.5rem;
+    }
+    @keyframes heartPulse {
+      0% { transform: scale(1); opacity: 0.8; }
+      50% { transform: scale(1.05); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.8; }
     }
     .timeline {
       margin: 2rem auto;
       display: flex;
       justify-content: center;
-      gap: 10px;
+      gap: 20px;
       flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
     }
     .point {
-      background-color: #fff;
-      border: 2px solid #ff69b4;
+      background: radial-gradient(circle, #ffccff 20%, #ff69b4 80%);
+      border: 3px solid #ff99cc;
       border-radius: 50%;
-      width: 50px;
-      height: 50px;
+      width: 60px;
+      height: 60px;
       cursor: pointer;
-      font-size: 1.5rem;
-      transition: transform 0.2s ease;
+      font-size: 1.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 12px #ff99cc;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
     }
     .point:hover {
       transform: scale(1.2);
-      background-color: #ff69b4;
-      color: white;
+      box-shadow: 0 0 20px #ff69b4, 0 0 40px #ff99cc;
+      animation: heartbeat 1s infinite;
+    }
+    @keyframes heartbeat {
+      0% { transform: scale(1.2); }
+      50% { transform: scale(1.3); }
+      100% { transform: scale(1.2); }
     }
     .photo-container {
       display: none;
-      margin: 1rem auto;
+      margin: 2rem auto;
       max-width: 90vw;
+      position: relative;
+      animation: floatIn 1s ease;
+    }
+    @keyframes floatIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     .photo-container img {
+      width: 100%;
       max-width: 300px;
-      aspect-ratio: 1/1;
-      clip-path: path("M150 0 C230 0 300 70 300 150 C300 250 200 300 150 360 C100 300 0 250 0 150 C0 70 70 0 150 0 Z");
-      shape-outside: ellipse(50% 50% at 50% 50%);
+      height: 300px;
       object-fit: cover;
-      border-radius: 0;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      clip-path: url(#heart-clip);
+      border: 4px solid #ff99cc;
+      box-shadow: 0 0 15px #ff69b4, 0 0 30px #ff99cc;
+      transition: transform 0.3s ease;
+      position: relative;
+      z-index: 1;
+    }
+    .photo-container img:hover {
+      transform: scale(1.05);
     }
     .phrase {
       display: none;
+      font-size: 1.5rem;
+      color: #ffccff;
+      text-shadow: 0 0 8px #ff69b4;
+      margin-top: 1rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      animation: fadeIn 1s ease;
     }
     .suspense, .proposal {
       display: none;
-      font-size: 1.4rem;
-      margin-top: 1rem;
-      color: #dc143c;
+      font-size: 1.7rem;
+      color: #ff69b4;
+      text-shadow: 0 0 10px #ff99cc;
+      margin-top: 1.5rem;
+      animation: fadeIn 1s ease;
     }
     #resetBtn {
       margin-top: 2rem;
-      padding: 10px 20px;
-      background-color: #d63384;
-      color: white;
-      border: none;
-      border-radius: 10px;
+      padding: 12px 24px;
+      background: transparent;
+      border: 2px solid #ff99cc;
+      border-radius: 20px;
+      color: #fff;
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.3rem;
       cursor: pointer;
-      font-size: 1rem;
+      transition: all 0.3s ease;
+      text-shadow: 0 0 5px #ff69b4;
     }
     #resetBtn:hover {
-      background-color: #b02a69;
+      background: #ff69b4;
+      box-shadow: 0 0 15px #ff99cc;
+      transform: scale(1.05);
     }
-    .heart {
+    .romantic-particle {
       position: fixed;
       top: -20px;
+      font-size: 1.5rem;
+      color: #ff99cc;
       animation: fall linear forwards;
+      z-index: -1;
+      pointer-events: none;
     }
     @keyframes fall {
       to {
-        transform: translateY(100vh);
+        transform: translateY(100vh) rotate(180deg);
       }
     }
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
     }
+    .constellation-line {
+      position: absolute;
+      background: linear-gradient(to right, transparent, #ff99cc, transparent);
+      height: 2px;
+      z-index: 0;
+    }
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 2.5rem;
+      }
+      .point {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+      }
+      .photo-container img {
+        max-width: 200px;
+        height: 200px;
+      }
+      .phrase, .suspense, .proposal {
+        font-size: 1.2rem;
+      }
+    }
   </style>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <h1>Nosso Relacionamento 💖</h1>
+  <canvas id="stars"></canvas>
+  <svg width="0" height="0">
+    <defs>
+      <clipPath id="heart-clip" clipPathUnits="objectBoundingBox">
+        <path d="M0.5,0.1 C0.7,0 0.9,0.2 1,0.4 C1,0.6 0.9,0.8 0.7,0.9 C0.5,1 0.3,0.9 0.3,0.9 C0.1,0.8 0,0.6 0,0.4 C0.1,0.2 0.3,0 0.5,0.1 Z" />
+      </clipPath>
+    </defs>
+  </svg>
+  <h1>💖</h1>
   <audio id="audioPlayer" src="C.mp3" preload="auto"></audio>
-  <div class="timeline" id="timeline" aria-label="Linha do tempo do relacionamento"></div>
+  <div class="timeline" id="timeline" aria-label="Linha do tempo do nosso amor"></div>
   <div class="photo-container" id="photoContainer" aria-live="polite">
     <img id="photo" src="" alt="Foto do momento" />
   </div>
   <div class="phrase" id="phrase"></div>
-  <div class="suspense" id="suspense">Espere um pouquinho... 💬</div>
+  <div class="suspense" id="suspense">Um momento, meu amor... 🌸</div>
   <div class="proposal" id="proposal"></div>
-  <button id="resetBtn">Recomeçar 💫</button>
+  <button id="resetBtn" aria-label="Reiniciar a jornada do amor">Recomeçar o Sonho 🌷</button>
 
   <script>
+    // Estrelas de fundo
+    const canvas = document.getElementById('stars');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const stars = [];
+    for (let i = 0; i < 150; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 1.2,
+        alpha: Math.random(),
+        speed: Math.random() * 0.3
+      });
+    }
+
+    function animateStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      stars.forEach(star => {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 204, 255, ${star.alpha})`;
+        ctx.fill();
+        star.alpha += star.speed / 100;
+        if (star.alpha > 1 || star.alpha < 0.4) star.speed = -star.speed;
+      });
+      requestAnimationFrame(animateStars);
+    }
+    animateStars();
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    // Linha do tempo
     const maxFotos = 7;
     const fotos = Array.from({ length: maxFotos }, (_, i) => `foto${i + 1}.jpg`);
+    const frases = [
+      "O dia em que nossos olhares se cruzaram pela primeira vez. ✨",
+      "Nossa primeira aventura juntos, cheia de risos. 💕",
+      "Aquele momento em que percebi que era você. 🌹",
+      "Juntos, construindo memórias que durarão para sempre. 💖",
+      "Cada abraço, um pedaço do céu na terra. 🌸",
+      "Nossos sonhos entrelaçados sob as estrelas. 🌌",
+      "O começo de uma eternidade ao seu lado. 💞"
+    ];
 
     function gerarTimeline() {
       const timeline = document.getElementById('timeline');
@@ -112,11 +259,37 @@
         const btn = document.createElement('button');
         btn.className = 'point';
         btn.setAttribute('data-photo', fotos[i]);
-        btn.setAttribute('aria-label', `Momento ${i + 1}`);
-        btn.innerHTML = '<span aria-hidden="true">❤️</span>';
+        btn.setAttribute('data-phrase', frases[i]);
+        btn.setAttribute('aria-label', `Momento ${i + 1}: ${frases[i]}`);
+        btn.innerHTML = '<span aria-hidden="true">💖</span>';
         timeline.appendChild(btn);
       }
+      drawConstellation();
       ativarTimeline();
+    }
+
+    function drawConstellation() {
+      const points = document.querySelectorAll('.point');
+      points.forEach((point, i) => {
+        if (i < points.length - 1) {
+          const nextPoint = points[i + 1];
+          const line = document.createElement('div');
+          line.className = 'constellation-line';
+          const rect1 = point.getBoundingClientRect();
+          const rect2 = nextPoint.getBoundingClientRect();
+          const x1 = rect1.left + rect1.width / 2;
+          const y1 = rect1.top + rect1.height / 2;
+          const x2 = rect2.left + rect2.width / 2;
+          const y2 = rect2.top + rect2.height / 2;
+          const length = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+          const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+          line.style.width = `${length}px`;
+          line.style.transform = `rotate(${angle}deg)`;
+          line.style.left = `${x1}px`;
+          line.style.top = `${y1}px`;
+          document.getElementById('timeline').appendChild(line);
+        }
+      });
     }
 
     gerarTimeline();
@@ -125,6 +298,7 @@
       const points = document.querySelectorAll('.point');
       const photoContainer = document.getElementById('photoContainer');
       const photo = document.getElementById('photo');
+      const phrase = document.getElementById('phrase');
       const suspense = document.getElementById('suspense');
       const proposal = document.getElementById('proposal');
       const audio = document.getElementById('audioPlayer');
@@ -132,22 +306,23 @@
       points.forEach((point, index) => {
         point.addEventListener('click', () => {
           photo.src = point.getAttribute('data-photo');
+          phrase.textContent = point.getAttribute('data-phrase');
           photoContainer.style.display = 'block';
-          photoContainer.style.animation = 'fadeIn 0.7s';
+          phrase.style.display = 'block';
+          createLoveParticles();
 
           if (index === 0) {
             audio.currentTime = 0;
-            audio.play();
+            audio.play().catch(err => console.log('Erro ao reproduzir áudio:', err));
           }
 
           if (index === points.length - 1) {
             suspense.style.display = 'block';
-            suspense.style.animation = 'fadeIn 0.7s';
             setTimeout(() => {
               suspense.style.display = 'none';
-              proposal.textContent = "Vamos continuar escrevendo juntos essa história de amor? 💖";
+              proposal.textContent = "Meu amor, quer ser minha estrela guia para toda a eternidade? 💖";
               proposal.style.display = 'block';
-            }, 1800);
+            }, 2000);
           } else {
             suspense.style.display = 'none';
             proposal.style.display = 'none';
@@ -166,17 +341,31 @@
       document.getElementById('audioPlayer').currentTime = 0;
     });
 
-    function createHeartRain() {
-      const heart = document.createElement('div');
-      heart.classList.add('heart');
-      heart.textContent = Math.random() > 0.2 ? '❤️' : '💕';
-      heart.style.left = `${Math.random() * 98}vw`;
-      heart.style.fontSize = `${Math.random() * 0.8 + 1.2}rem`;
-      heart.style.animationDuration = `${Math.random() * 2 + 4}s`;
-      document.body.appendChild(heart);
-      setTimeout(() => heart.remove(), 5000);
+    function createLoveParticles() {
+      for (let i = 0; i < 15; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('romantic-particle');
+        particle.textContent = Math.random() > 0.5 ? '💖' : '🌸';
+        particle.style.left = `${Math.random() * 100}vw`;
+        particle.style.top = `${Math.random() * 100}vh`;
+        particle.style.fontSize = `${Math.random() * 0.8 + 1}rem`;
+        particle.style.animationDuration = '1s';
+        document.body.appendChild(particle);
+        setTimeout(() => particle.remove(), 1000);
+      }
     }
-    setInterval(createHeartRain, 400);
+
+    function createRomanticParticle() {
+      const particle = document.createElement('div');
+      particle.classList.add('romantic-particle');
+      particle.textContent = Math.random() > 0.5 ? '💖' : '🌸';
+      particle.style.left = `${Math.random() * 98}vw`;
+      particle.style.fontSize = `${Math.random() * 0.8 + 1.2}rem`;
+      particle.style.animationDuration = `${Math.random() * 3 + 4}s`;
+      document.body.appendChild(particle);
+      setTimeout(() => particle.remove(), 5000);
+    }
+    setInterval(createRomanticParticle, 500);
   </script>
 </body>
 </html>
