@@ -139,27 +139,97 @@
 <body>
   <h1>Nosso Relacionamento 💖</h1>
   <audio id="audioPlayer" src="C.mp3" preload="auto"></audio>
-  <div class="timeline" aria-label="Linha do tempo do relacionamento">
-    <button class="point" data-photo="foto1.jpg" data-phrase="No silêncio do primeiro olhar, nasceu a promessa de um novo começo." aria-label="Primeiro momento"><span aria-hidden="true">❤️</span></button>
-    <button class="point" data-photo="foto2.jpg" data-phrase="Entre sorrisos tímidos, descobrimos a beleza de sermos nós mesmos." aria-label="Segundo momento"><span aria-hidden="true">❤️</span></button>
-    <button class="point" data-photo="foto3.jpg" data-phrase="Cada instante ao seu lado transformou o tempo em eternidade suave." aria-label="Terceiro momento"><span aria-hidden="true">❤️</span></button>
-    <button class="point" data-photo="foto4.jpg" data-phrase="Nos dias de tempestade, encontrei em você o abrigo mais sereno." aria-label="Quarto momento"><span aria-hidden="true">❤️</span></button>
-    <button class="point" data-photo="foto5.jpg" data-phrase="E assim seguimos, escrevendo juntos um poema que só faz sentido a dois." aria-label="Quinto momento"><span aria-hidden="true">❤️</span></button>
-  </div>
+  <div class="timeline" id="timeline" aria-label="Linha do tempo do relacionamento"></div>
   <div class="photo-container" id="photoContainer" aria-live="polite">
     <img id="photo" src="" alt="Foto do momento" />
   </div>
   <div class="phrase" id="phrase"></div>
   <div class="suspense" id="suspense">Espere um pouquinho... 💬</div>
-  <div class="proposal" id="proposal">Quer namorar comigo? 💍</div>
+  <div class="proposal" id="proposal"></div>
   <script>
-    const points = document.querySelectorAll('.point');
-    const photoContainer = document.getElementById('photoContainer');
-    const photo = document.getElementById('photo');
-    const phrase = document.getElementById('phrase');
-    const suspense = document.getElementById('suspense');
-    const proposal = document.getElementById('proposal');
-    const audio = document.getElementById('audioPlayer');
+    // Poema em partes, um para cada foto
+    const frases = [
+      "No silêncio do primeiro olhar, nasceu a promessa de um novo começo.",
+      "Entre sorrisos tímidos, descobrimos a beleza de sermos nós mesmos.",
+      "Cada instante ao seu lado transformou o tempo em eternidade suave.",
+      "Nos dias de tempestade, encontrei em você o abrigo mais sereno.",
+      "E assim seguimos, escrevendo juntos um poema que só faz sentido a dois.",
+      "E cada nova foto é mais um verso dessa história sem fim.",
+      "O tempo passa, mas o sentimento só cresce, renovando cada capítulo.",
+      "Nosso amor é feito de detalhes, memórias e sonhos compartilhados.",
+      "Seguimos juntos, lado a lado, celebrando cada momento vivido.",
+      "E o futuro é apenas mais uma página em branco para nós dois."
+    ];
+
+    // Descobre quantas fotos existem (até 20, pode aumentar se quiser)
+    const maxFotos = 20;
+    const fotos = [];
+    for (let i = 1; i <= maxFotos; i++) {
+      const img = new Image();
+      img.src = `foto${i}.jpg`;
+      img.onload = () => {
+        if (!fotos.includes(img.src)) {
+          fotos.push(img.src);
+          if (fotos.length === 1) gerarTimeline(); // Gera só uma vez, quando a primeira carrega
+        }
+      };
+      img.onerror = () => {};
+    }
+
+    function gerarTimeline() {
+      const timeline = document.getElementById('timeline');
+      timeline.innerHTML = '';
+      for (let i = 1; i <= fotos.length; i++) {
+        const frase = frases[i - 1] || `Mais um capítulo da nossa história juntos.`;
+        const btn = document.createElement('button');
+        btn.className = 'point';
+        btn.setAttribute('data-photo', `foto${i}.jpg`);
+        btn.setAttribute('data-phrase', frase);
+        btn.setAttribute('aria-label', `Momento ${i}`);
+        btn.innerHTML = '<span aria-hidden="true">❤️</span>';
+        timeline.appendChild(btn);
+      }
+      ativarTimeline();
+    }
+
+    function ativarTimeline() {
+      const points = document.querySelectorAll('.point');
+      const photoContainer = document.getElementById('photoContainer');
+      const photo = document.getElementById('photo');
+      const phrase = document.getElementById('phrase');
+      const suspense = document.getElementById('suspense');
+      const proposal = document.getElementById('proposal');
+      const audio = document.getElementById('audioPlayer');
+
+      points.forEach((point, index) => {
+        point.addEventListener('click', () => {
+          photo.src = point.getAttribute('data-photo');
+          photoContainer.style.display = 'block';
+          photoContainer.style.animation = 'fadeIn 0.7s';
+          phrase.textContent = point.getAttribute('data-phrase');
+          phrase.style.display = 'block';
+          phrase.style.animation = 'fadeIn 0.7s';
+
+          if (index === 0) {
+            audio.currentTime = 0;
+            audio.play();
+          }
+
+          // Suspense no último ponto, sem pedido de namoro
+          if (index === points.length - 1) {
+            suspense.style.display = 'block';
+            suspense.style.animation = 'fadeIn 0.7s';
+            setTimeout(() => {
+              suspense.style.display = 'none';
+              proposal.style.display = 'none';
+            }, 1800);
+          } else {
+            suspense.style.display = 'none';
+            proposal.style.display = 'none';
+          }
+        });
+      });
+    }
 
     // Chuva de corações contínua
     function createHeartRain() {
@@ -173,39 +243,6 @@
       setTimeout(() => heart.remove(), 5000);
     }
     setInterval(createHeartRain, 400);
-
-    // Efeito nos pontos
-    points.forEach((point, index) => {
-      point.addEventListener('click', () => {
-        // Mostra foto e frase com animação
-        photo.src = point.getAttribute('data-photo');
-        photoContainer.style.display = 'block';
-        photoContainer.style.animation = 'fadeIn 0.7s';
-        phrase.textContent = point.getAttribute('data-phrase');
-        phrase.style.display = 'block';
-        phrase.style.animation = 'fadeIn 0.7s';
-
-        // Toca música no primeiro ponto
-        if (index === 0) {
-          audio.currentTime = 0;
-          audio.play();
-        }
-
-        // Proposta no último ponto
-        if (index === points.length - 1) {
-          suspense.style.display = 'block';
-          suspense.style.animation = 'fadeIn 0.7s';
-          setTimeout(() => {
-            suspense.style.display = 'none';
-            proposal.style.display = 'block';
-            proposal.style.animation = 'glow 1.5s infinite alternate, fadeIn 1s';
-          }, 1800);
-        } else {
-          suspense.style.display = 'none';
-          proposal.style.display = 'none';
-        }
-      });
-    });
   </script>
 </body>
 </html>
